@@ -6,8 +6,8 @@
  *
  * PHP version 5
  *
- * Copyright (c) 2011-2014 Vitaly Doroshko
- * All right reserved.
+ * Copyright (c) 2011-2014, Vitaly Doroshko
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,6 +43,7 @@
  *             BSD 3-Clause License
  * @version    1.0
  * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
  */
 require_once 'File.php';
 
@@ -66,57 +67,69 @@ class File_CSV extends File
     // {{{ constructor
 
     /**
-     * @param  string  $filename
-     * @param  string  $mode
-     * @param  array   $options (optional)
+     * Constructs a new File_CSV object and opens a CSV file on the specified
+     * path either for reading or for writing
+     *
+     * @param  string  $path The file to open
+     * @param  string  $mode The file access mode
+     * @param  array   $options The runtime configuration options
      * @throws DomainException
-     * @throws OutOfBoundsException
+     * @throws File_NotFoundException
      * @throws File_IOException
      */
-    protected function __construct($filename, $mode = 'r', $options = array())
+    protected function __construct($path, $mode, $options)
     {
+        if (!preg_match('/^([r]|[waxc])[bt]?$/', (string)$mode)) {
+            throw new DomainException('access mode can be either read or write');
+        }
+
         $this->_registerOption('linelen', 2048);
         $this->_registerOption('delimiter', ',');
         $this->_registerOption('enclosure', '"');
-        $this->_registerOption('filter');
 
-        parent::__construct($filename, $mode, $options);
+        parent::__construct($path, $mode, $options);
     }
 
     // }}}
     // {{{ open()
 
     /**
-     * @param  string  $filename
-     * @param  string  $mode
-     * @param  array   $options (optional)
-     * @return object
-     * @since  1.0
+     * Creates a new File_CSV object and opens a CSV file on the specified path
+     * either for reading or for writing
+     *
+     * @param  string  $path The file to open
+     * @param  string  $mode (optional) The file access mode
+     * @param  array   $options (optional) The runtime configuration options
+     * @return object  A new File_CSV object
      * @throws DomainException
-     * @throws OutOfBoundsException
+     * @throws File_NotFoundException
      * @throws File_IOException
+     * @since  1.0
      */
-    public static function open($filename, $mode = 'r', $options = array())
+    public static function open($path, $mode = 'r', $options = array())
     {
         static $instances;
 
-        if (!isset($instances[(string)$filename])) {
-            $instances[(string)$filename] = new self($filename, $mode, $options);
-        } elseif (!$instances[(string)$filename]->handle) {
-            $instances[(string)$filename] = new self($filename, $mode, $options);
+        if (!isset($instances[(string)$path])) {
+            $instances[(string)$path] = new self($path, $mode, $options);
+        } elseif (!$instances[(string)$path]->handle) {
+            $instances[(string)$path] = new self($path, $mode, $options);
         }
 
-        return $instances[(string)$filename];
+        return $instances[(string)$path];
     }
 
     // }}}
     // {{{ read()
 
     /**
-     * @return mixed
-     * @since  1.0
+     * Reads a row from the CSV file into an array
+     *
+     * @return mixed   The read array or null if the end of the CSV file has been reached
+     * @throws File_EncodingException
+     * @throws File_FilterException
      * @throws File_IOException
-     * @throws File_OptionValueException
+     * @since  1.0
      */
     public function read()
     {
@@ -127,10 +140,13 @@ class File_CSV extends File
     // {{{ readAll()
 
     /**
-     * @return array
-     * @since  1.0
+     * Reads the entire CSV file into a multidimensional array
+     *
+     * @return array   The read multidimensional array or null if the end of the CSV file has been reached
+     * @throws File_EncodingException
+     * @throws File_FilterException
      * @throws File_IOException
-     * @throws File_OptionValueException
+     * @since  1.0
      */
     public function readAll()
     {
@@ -146,11 +162,14 @@ class File_CSV extends File
     // {{{ write()
 
     /**
-     * @param  array   $row
-     * @return integer Number of bytes written including EOL separator
-     * @since  1.0
+     * Writes the given array to the CSV file
+     *
+     * @param  array   $row The array to be written
+     * @return integer The number of bytes written
+     * @throws File_EncodingException
+     * @throws File_FilterException
      * @throws File_IOException
-     * @throws File_OptionValueException
+     * @since  1.0
      */
     public function write($row)
     {
@@ -161,11 +180,14 @@ class File_CSV extends File
     // {{{ writeAll()
 
     /**
-     * @param  array   $rows
-     * @return integer Number of bytes written including EOL separators
-     * @since  1.0
+     * Writes the given multidimensional array to the CSV file
+     *
+     * @param  array   $rows The multidimensional array to be written
+     * @return integer The number of bytes written
+     * @throws File_EncodingException
+     * @throws File_FilterException
      * @throws File_IOException
-     * @throws File_OptionValueException
+     * @since  1.0
      */
     public function writeAll($rows)
     {
@@ -181,9 +203,11 @@ class File_CSV extends File
     // {{{ getIterator()
 
     /**
-     * @return object
-     * @since  1.0
+     * Returns an iterator to traverse the rows in the CSV file opened for reading
+     *
+     * @return object  A File_CSV_Iterator object
      * @throws File_UnsupportedOperationException
+     * @since  1.0
      */
     public function getIterator()
     {
@@ -194,15 +218,18 @@ class File_CSV extends File
     // {{{ _getRow()
 
     /**
-     * @return mixed
-     * @since  1.0
+     * Reads a row from the CSV file into an array
+     *
+     * @return mixed   The read array or null if the end of the CSV file has been reached
+     * @throws File_EncodingException
+     * @throws File_FilterException
      * @throws File_IOException
-     * @throws File_OptionValueException
+     * @since  1.0
      */
     protected function _getRow()
     {
         if (preg_match('/^[waxc][bt]?$/', $this->_mode)) {
-            throw new File_IOException(sprintf("file '%s' is not open for reading", $this->_filename));
+            throw new File_IOException(sprintf("file '%s' is not open for reading", $this->_path));
         }
 
         $row = @fgetcsv(
@@ -217,7 +244,7 @@ class File_CSV extends File
                 return null;
             }
 
-            throw new File_IOException(sprintf("could not read from file '%s'", $this->_filename));
+            throw new File_IOException(sprintf("could not read from file '%s'", $this->_path));
         }
 
         if ($this->_options['encoding']) {
@@ -235,16 +262,19 @@ class File_CSV extends File
     // {{{ _putRow()
 
     /**
-     * @param  array   $row
-     * @return integer
-     * @since  1.0
+     * Writes the given array to the CSV file
+     *
+     * @param  array   $row The array to be written
+     * @return integer The number of bytes written
+     * @throws File_EncodingException
+     * @throws File_FilterException
      * @throws File_IOException
-     * @throws File_OptionValueException
+     * @since  1.0
      */
     protected function _putRow($row)
     {
         if (preg_match('/^[r][bt]?$/', $this->_mode)) {
-            throw new File_IOException(sprintf("file '%s' is not open for writing", $this->_filename));
+            throw new File_IOException(sprintf("file '%s' is not open for writing", $this->_path));
         }
 
         if (is_callable($this->_options['filter'])) {
@@ -263,7 +293,7 @@ class File_CSV extends File
         );
 
         if ($numBytesWritten === false) {
-            throw new File_IOException(sprintf("could not write to file '%s'", $this->_filename));
+            throw new File_IOException(sprintf("could not write to file '%s'", $this->_path));
         }
 
         return $numBytesWritten;
@@ -273,11 +303,14 @@ class File_CSV extends File
     // {{{ _convertEncoding()
 
     /**
-     * @param  array   $row
-     * @param  string  $encoding
-     * @return array
+     * Converts the elements of the given array to the encoding specified by the
+     * 'encoding' runtime configuration option
+     *
+     * @param  array   $row The array to convert
+     * @param  string  $encoding The encoding of the elements of the array to convert
+     * @return array   The converted array
+     * @throws File_EncodingException
      * @since  1.0
-     * @throws File_OptionValueException
      */
     protected function _convertEncoding($row, $encoding)
     {
@@ -287,7 +320,7 @@ class File_CSV extends File
 
         for ($i = 0; $i < count((array)$row); $i++) {
             if (($row[$i] = iconv($encoding, $encoding == $this->_options['encoding'] ? 'utf8' : $this->_options['encoding'], (string)$row[$i])) === false) {
-                throw new File_OptionValueException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
+                throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
             }
         }
 
@@ -298,16 +331,19 @@ class File_CSV extends File
     // {{{ _applyFilter()
 
     /**
-     * @param  array   $row
-     * @return array
+     * Applies the callback function specified by the 'filter' runtime
+     * configuration option to the elements of the given array
+     *
+     * @param  array   $row The array to apply the callback filter function to
+     * @return array   The array after applying the callback filter function
+     * @throws File_FilterException
      * @since  1.0
-     * @throws File_OptionValueException
      */
     protected function _applyFilter($row)
     {
         for ($i = 0; $i < count((array)$row); $i++) {
             if (($row[$i] = call_user_func($this->_options['filter'], (string)$row[$i])) === false) {
-                throw new File_OptionValueException(sprintf('function %s() does not exist or could not be called', $this->_options['filter']));
+                throw new File_FilterException(sprintf('function %s() does not exist or could not be called', $this->_options['filter']));
             }
         }
 
@@ -321,7 +357,7 @@ class File_CSV extends File
 // {{{ class File_CSV_Iterator
 
 /**
- * CSV file iterator class
+ * Iterator class for traversing rows in a CSV file
  *
  * @category   File Formats
  * @package    File_CSV
@@ -337,26 +373,26 @@ class File_CSV_Iterator implements Iterator
     // {{{ protected class properties
 
     /**
-     * CSV file object
+     * File_CSV object
      *
-     * @since  1.0
      * @var    object
+     * @since  1.0
      */
-    protected $_file;
+    protected $_csvfile;
 
     /**
      * Current row data
      *
-     * @since  1.0
      * @var    mixed
+     * @since  1.0
      */
     protected $_currentRow;
 
     /**
      * Current row number
      *
-     * @since  1.0
      * @var    integer
+     * @since  1.0
      */
     protected $_rowNumber;
 
@@ -364,32 +400,37 @@ class File_CSV_Iterator implements Iterator
     // {{{ constructor
 
     /**
-     * @param  object  $file
+     * Constructs a new File_CSV_Iterator object
+     *
+     * @param  object  $csvfile The File_CSV object to traverse
      * @throws File_UnsupportedOperationException
      */
-    public function __construct(File_CSV $file)
+    public function __construct(File_CSV $csvfile)
     {
-        if (preg_match('/^[waxc][bt]?$/', $file->mode)) {
-            throw new File_UnsupportedOperationException(sprintf("file '%s' is not open for reading", $file->filename));
+        if (preg_match('/^[waxc][bt]?$/', $csvfile->getMode())) {
+            throw new File_UnsupportedOperationException(sprintf("file '%s' is not open for reading", $csvfile->getPath()));
         }
 
-        $this->_file = $file;
+        $this->_csvfile = $csvfile;
     }
 
     // }}}
     // {{{ rewind()
 
     /**
+     * Rewinds the iterator to the beginning of the CSV file
+     *
      * @return void
-     * @since  1.0
+     * @throws File_EncodingException
+     * @throws File_FilterException
      * @throws File_IOException
-     * @throws File_OptionValueException
+     * @since  1.0
      */
     public function rewind()
     {
-        $this->_file->seek(0);
+        $this->_csvfile->seek(0);
 
-        $this->_currentRow = $this->_file->read();
+        $this->_currentRow = $this->_csvfile->read();
         $this->_rowNumber = 0;
     }
 
@@ -397,7 +438,9 @@ class File_CSV_Iterator implements Iterator
     // {{{ valid()
 
     /**
-     * @return boolean
+     * Checks if the end of the CSV file has not been reached
+     *
+     * @return boolean true if the end of the CSV file has not been reached or false otherwise
      * @since  1.0
      */
     public function valid()
@@ -409,7 +452,9 @@ class File_CSV_Iterator implements Iterator
     // {{{ key()
 
     /**
-     * @return integer
+     * Returns the current row number in the CSV file
+     *
+     * @return integer The current row number
      * @since  1.0
      */
     public function key()
@@ -421,7 +466,9 @@ class File_CSV_Iterator implements Iterator
     // {{{ current()
 
     /**
-     * @return mixed
+     * Returns the current row from the CSV file
+     *
+     * @return array   The current row
      * @since  1.0
      */
     public function current()
@@ -433,14 +480,17 @@ class File_CSV_Iterator implements Iterator
     // {{{ next()
 
     /**
+     * Moves the iterator to the next row in the CSV file
+     *
      * @return void
-     * @since  1.0
+     * @throws File_EncodingException
+     * @throws File_FilterException
      * @throws File_IOException
-     * @throws File_OptionValueException
+     * @since  1.0
      */
     public function next()
     {
-        $this->_currentRow = $this->_file->read();
+        $this->_currentRow = $this->_csvfile->read();
         $this->_rowNumber++;
     }
 
