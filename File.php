@@ -412,6 +412,29 @@ class File implements IteratorAggregate
     }
 
     // }}}
+    // {{{ unlink()
+
+    /**
+     * Deletes the specified file
+     *
+     * @param  string  $path The file to delete
+     * @return void
+     * @throws File_NotFoundException
+     * @throws File_IOException
+     * @since  1.0
+     */
+    public static function unlink($path)
+    {
+        if (!self::exists($path)) {
+            throw new File_NotFoundException(sprintf("file '%s' not found", $path));
+        }
+
+        if (!@unlink((string)$path)) {
+            throw new File_IOException(sprintf("could not delete file '%s'", $path));
+        }
+    }
+
+    // }}}
     // {{{ getIterator()
 
     /**
