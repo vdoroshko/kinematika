@@ -120,6 +120,36 @@ class File_CSV extends File
     }
 
     // }}}
+    // {{{ createTemporary()
+
+    /**
+     * Creates a CSV file with unique name in the specified directory and returns
+     * a new File_CSV object associated with the CSV file
+     *
+     * @param  string  $dir The directory where the temporary file will be created
+     * @param  string  $prefix The prefix of the temporary file name
+     * @param  string  $mode (optional) The file access mode
+     * @param  array   $options (optional) The runtime configuration options
+     * @return object  A new File_CSV object
+     * @throws DomainException
+     * @throws File_NotFoundException
+     * @throws File_IOException
+     * @since  1.0
+     */
+    public static function createTemporary($dir, $prefix = '', $mode = 'w', $options = array())
+    {
+        if (!self::exists($dir)) {
+            throw new File_NotFoundException(sprintf("directory '%s' does not exist", $dir));
+        }
+
+        if (!($path = @tempnam((string)$dir, (string)$prefix))) {
+            throw new File_IOException(sprintf("could not create temporary file in directory '%s'", $dir));
+        }
+
+        return self::open($path, $mode, $options);
+    }
+
+    // }}}
     // {{{ read()
 
     /**
