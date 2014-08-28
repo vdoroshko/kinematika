@@ -451,38 +451,6 @@ class File implements IteratorAggregate
     }
 
     // }}}
-    // {{{ parse()
-
-    /**
-     * Parses file and replaces all occurencies of keys to it values specified in
-     * $values array.
-     *
-     * For example, we have the following array:
-     *
-     * $values = array(
-     *     "%firstName" => "Vitaly",
-     *     "%lastName"  => "Doroshko"
-     * );
-     *
-     * The function replaces all occurencies of '%firstName' to 'Vitaly' and
-     * '%lastName' will be replace to 'Doroshko'.
-     *
-     * Feel free to use in your own scripts.
-     *
-     * @param    string    $fileName
-     * @param    array     $values
-     * @return   string
-     * @throws   File_IOException
-     * @since    1.0
-     */
-    public static function parse($fileName, $values)
-    {
-        $contents = self::open($fileName)->readAll();
-        return str_replace(array_keys((array)$values), array_values((array)$values),
-                           (string)$contents);
-    }
-
-    // }}}
     // {{{ getName()
 
     /**
