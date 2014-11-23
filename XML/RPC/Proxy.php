@@ -192,6 +192,22 @@ class XML_RPC_Proxy
     }
 
     // }}}
+    // {{{ isFault()
+
+    /**
+     * Checks if the given array represents an XML-RPC fault
+     *
+     * @param  array   $result An array to check
+     * @return boolean true if the array represents an XML-RPC fault or false
+     *                 otherwise
+     * @since  1.0
+     */
+    public static function isFault($result)
+    {
+        return xmlrpc_is_fault((array)$result);
+    }
+
+    // }}}
     // {{{ __call()
 
     /**
@@ -203,6 +219,7 @@ class XML_RPC_Proxy
      *                 associative array representing an XML-RPC fault
      * @throws BadMethodCallException
      * @throws XML_RPC_Proxy_IOException
+     * @since  1.0
      */
     public function __call($name, $arguments)
     {
@@ -223,7 +240,7 @@ class XML_RPC_Proxy
         }
 
         $response = xmlrpc_decode($file);
-        if (xmlrpc_is_fault((array)$response)) {
+        if (self::isFault((array)$response)) {
             if ($response['faultCode'] == -32601) {
                 throw new BadMethodCallException(sprintf('method %s() does not exist', $name));
             }
