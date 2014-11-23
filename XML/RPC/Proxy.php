@@ -235,18 +235,18 @@ class XML_RPC_Proxy
         );
 
         $context = stream_context_create($options);
-        if (!($file = @file_get_contents($this->_url, false, $context))) {
+        if (!($response = @file_get_contents($this->_url, false, $context))) {
             throw new XML_RPC_Proxy_IOException(sprintf("unable to communicate with server at '%s'", $this->_url));
         }
 
-        $response = xmlrpc_decode($file);
-        if (self::isFault($response)) {
-            if ($response['faultCode'] == -32601) {
+        $result = xmlrpc_decode($response);
+        if (self::isFault($result)) {
+            if ($result['faultCode'] == -32601) {
                 throw new BadMethodCallException(sprintf('method %s() does not exist', $name));
             }
         }
 
-        return $response;
+        return $result;
     }
 
     // }}}
