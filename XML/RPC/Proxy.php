@@ -195,7 +195,7 @@ class XML_RPC_Proxy
     // {{{ isFault()
 
     /**
-     * Checks if the given array represents an XML-RPC fault
+     * Determines if the given array represents an XML-RPC fault
      *
      * @param  array   $result An array to check
      * @return boolean true if the array represents an XML-RPC fault or false
