@@ -155,7 +155,8 @@ class File_CSV extends File
     /**
      * Reads a row from the CSV file into an array
      *
-     * @return mixed   The read array or null if the end of the CSV file has been reached
+     * @return mixed   The read array or null if the end of the CSV file has been
+     *                 reached
      * @throws File_EncodingException
      * @throws File_FilterException
      * @throws File_IOException
@@ -172,7 +173,8 @@ class File_CSV extends File
     /**
      * Reads the entire CSV file into a multidimensional array
      *
-     * @return array   The read multidimensional array or null if the end of the CSV file has been reached
+     * @return array   The read multidimensional array or null if the end of the
+     *                 CSV file has been reached
      * @throws File_EncodingException
      * @throws File_FilterException
      * @throws File_IOException
@@ -250,7 +252,8 @@ class File_CSV extends File
     /**
      * Reads a row from the CSV file into an array
      *
-     * @return mixed   The read array or null if the end of the CSV file has been reached
+     * @return mixed   The read array or null if the end of the CSV file has been
+     *                 reached
      * @throws File_EncodingException
      * @throws File_FilterException
      * @throws File_IOException
@@ -470,7 +473,8 @@ class File_CSV_Iterator implements Iterator
     /**
      * Checks if the end of the CSV file has not been reached
      *
-     * @return boolean true if the end of the CSV file has not been reached or false otherwise
+     * @return boolean true if the end of the CSV file has not been reached or
+     *                 false otherwise
      * @since  1.0
      */
     public function valid()

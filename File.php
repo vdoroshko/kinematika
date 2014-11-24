@@ -275,7 +275,8 @@ class File implements IteratorAggregate
      * Reads either a line or the specified number of bytes from the file
      *
      * @param  mixed   $numBytes (optional) The maximum number of bytes to read
-     * @return mixed   The read string or null if the end of the file has been reached
+     * @return mixed   The read string or null if the end of the file has been
+     *                 reached
      * @throws File_EncodingException
      * @throws File_FilterException
      * @throws File_IOException
@@ -318,7 +319,8 @@ class File implements IteratorAggregate
     /**
      * Reads the entire file into a string
      *
-     * @return mixed   The read string or null if the end of the file has been reached
+     * @return mixed   The read string or null if the end of the file has been
+     *                 reached
      * @throws File_EncodingException
      * @throws File_FilterException
      * @throws File_IOException
@@ -790,7 +792,8 @@ class File_Iterator implements Iterator
     /**
      * Checks if the end of the file has not been reached
      *
-     * @return boolean true if the end of the file has not been reached or false otherwise
+     * @return boolean true if the end of the file has not been reached or false
+     *                 otherwise
      * @since  1.0
      */
     public function valid()
