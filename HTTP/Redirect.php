@@ -48,7 +48,7 @@
 require_once 'HTTP/Exception.php';
 
 // {{{ classes
-// {{{ class HTTP_Exception
+// {{{ class HTTP_Redirect
 
 /**
  * HTTP redirect exception class
