@@ -100,7 +100,7 @@ class XML_RPC_Proxy
 
         $this->_url = (string)$url;
 
-        $this->_registerOption('prefix');
+        $this->_registerOption('namespace');
         $this->_registerOption('charset', 'utf-8');
 
         $this->setOptions($options);
@@ -223,7 +223,7 @@ class XML_RPC_Proxy
      */
     public function __call($name, $arguments)
     {
-        $method = ($this->_options['prefix'] ? $this->_options['prefix'] . '.' : '') . $name;
+        $method = ($this->_options['namespace'] ? $this->_options['namespace'] . '.' : '') . $name;
         $request = xmlrpc_encode_request($method, $arguments);
 
         $options = array(
