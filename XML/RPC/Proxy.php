@@ -159,7 +159,7 @@ class XML_RPC_Proxy
      * Sets the value of the specified runtime configuration option
      *
      * @param  string  $name The option name
-     * @param  mixed   $value The option value
+     * @param  string  $value The option value
      * @return void
      * @throws DomainException
      * @since  1.0
