@@ -198,9 +198,9 @@ class File implements IteratorAggregate
     {
         static $instances;
 
-        if (!isset($instances[(string)$path])) {
+        if (empty($instances[(string)$path])) {
             $instances[(string)$path] = new self($path, $mode, $options);
-        } elseif (!$instances[(string)$path]->handle) {
+        } elseif (empty($instances[(string)$path]->handle)) {
             $instances[(string)$path] = new self($path, $mode, $options);
         }
 
@@ -603,7 +603,8 @@ class File implements IteratorAggregate
         }
 
         switch (gettype($this->_options[(string)$name])) {
-            case 'NULL': case 'array':
+            case 'NULL':
+            case 'array':
                 $this->_options[(string)$name] = $value;
                 break;
 
