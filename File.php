@@ -361,7 +361,7 @@ class File implements IteratorAggregate
         }
 
         if ($this->_options['encoding']) {
-            $str = $this->_convertEncoding($str, 'utf8');
+            $str = $this->_convertEncoding($str, 'utf-8');
         }
 
         if ($numBytes !== null) {
@@ -675,7 +675,7 @@ class File implements IteratorAggregate
             return $str;
         }
 
-        if (($str = iconv($encoding, $encoding == $this->_options['encoding'] ? 'utf8' : $this->_options['encoding'], (string)$str)) === false) {
+        if (($str = iconv($encoding, $encoding == $this->_options['encoding'] ? 'utf-8' : $this->_options['encoding'], (string)$str)) === false) {
             throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
         }
 
