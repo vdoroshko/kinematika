@@ -214,7 +214,7 @@ class File implements IteratorAggregate
      * Creates a file with unique name in the specified directory and returns a
      * new File object associated with the file
      *
-     * @param  string  $dir The directory where the temporary file will be created
+     * @param  string  $dir The directory where the temporary file should be created
      * @param  string  $prefix The prefix of the temporary file name
      * @param  string  $mode (optional) The file access mode
      * @param  array   $options (optional) The runtime configuration options
