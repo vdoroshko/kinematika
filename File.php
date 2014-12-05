@@ -782,7 +782,6 @@ class File_Iterator implements Iterator
     public function rewind()
     {
         $this->_file->seek(0);
-
         $this->_currentLine = $this->_file->read();
         $this->_lineNumber = 0;
     }
