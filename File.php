@@ -249,7 +249,7 @@ class File implements IteratorAggregate
      */
     public function close()
     {
-        if (!$this->_handle) {
+        if (empty($this->_handle)) {
             return;
         }
 
