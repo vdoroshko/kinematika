@@ -462,7 +462,6 @@ class File_CSV_Iterator implements Iterator
     public function rewind()
     {
         $this->_csvfile->seek(0);
-
         $this->_currentRow = $this->_csvfile->read();
         $this->_rowNumber = 0;
     }
