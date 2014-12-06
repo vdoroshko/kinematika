@@ -225,7 +225,7 @@ class File_CSV extends File
     {
         $numBytesWritten = 0;
         foreach ((array)$rows as $row) {
-            $numBytesWritten += $this->write($row);
+            $numBytesWritten += $this->_putRow($row);
         }
 
         return $numBytesWritten;
