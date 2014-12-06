@@ -110,9 +110,9 @@ class File_CSV extends File
     {
         static $instances;
 
-        if (!isset($instances[(string)$path])) {
+        if (empty($instances[(string)$path])) {
             $instances[(string)$path] = new self($path, $mode, $options);
-        } elseif (!$instances[(string)$path]->handle) {
+        } elseif (empty($instances[(string)$path]->handle)) {
             $instances[(string)$path] = new self($path, $mode, $options);
         }
 
