@@ -183,7 +183,7 @@ class File_CSV extends File
     public function readAll()
     {
         $rows = array();
-        while (($row = $this->read()) !== null) {
+        while (($row = $this->_getRow()) !== null) {
             $rows[] = $row;
         }
 
