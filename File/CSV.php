@@ -315,7 +315,7 @@ class File_CSV extends File
         }
 
         if ($this->_options['encoding']) {
-            $row = $this->_convertEncoding($row, 'utf8');
+            $row = $this->_convertEncoding($row, 'utf-8');
         }
 
         $numBytesWritten = @fputcsv(
@@ -352,7 +352,7 @@ class File_CSV extends File
         }
 
         for ($i = 0; $i < count((array)$row); $i++) {
-            if (($row[$i] = iconv($encoding, $encoding == $this->_options['encoding'] ? 'utf8' : $this->_options['encoding'], (string)$row[$i])) === false) {
+            if (($row[$i] = iconv($encoding, $encoding == $this->_options['encoding'] ? 'utf-8' : $this->_options['encoding'], (string)$row[$i])) === false) {
                 throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
             }
         }
