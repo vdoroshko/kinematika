@@ -83,7 +83,7 @@ class File_CSV extends File
             throw new DomainException('access mode can be either read or write');
         }
 
-        $this->_registerOption('linelen', 2048);
+        $this->_registerOption('maxLineLength', 2048);
         $this->_registerOption('delimiter', ',');
         $this->_registerOption('enclosure', '"');
 
@@ -267,7 +267,7 @@ class File_CSV extends File
 
         $row = @fgetcsv(
             $this->_handle,
-            $this->_options['linelen'],
+            $this->_options['maxLineLength'],
             $this->_options['delimiter'],
             $this->_options['enclosure']
         );
