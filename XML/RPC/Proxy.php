@@ -242,7 +242,7 @@ class XML_RPC_Proxy
         $result = xmlrpc_decode($response);
         if (self::isFault($result)) {
             if ($result['faultCode'] == -32601) {
-                throw new BadMethodCallException(sprintf('method %s() does not exist', $method));
+                throw new BadMethodCallException(sprintf('method %s() does not exist', trim($method)));
             }
         }
 
