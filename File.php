@@ -284,6 +284,10 @@ class File implements IteratorAggregate
      */
     public function read($numBytes = null)
     {
+        if (empty($this->_handle)) {
+            throw new File_IOException(sprintf("attempt to read from closed file '%s'", $this->_path));
+        }
+
         if (preg_match('/^[waxc][bt]?$/', $this->_mode)) {
             throw new File_IOException(sprintf("file '%s' is not open for reading", $this->_path));
         }
@@ -354,6 +358,10 @@ class File implements IteratorAggregate
      */
     public function write($str, $numBytes = null)
     {
+        if (empty($this->_handle)) {
+            throw new File_IOException(sprintf("attempt to write to closed file '%s'", $this->_path));
+        }
+
         if (preg_match('/^[r][bt]?$/', $this->_mode)) {
             throw new File_IOException(sprintf("file '%s' is not open for writing", $this->_path));
         }
@@ -413,6 +421,10 @@ class File implements IteratorAggregate
      */
     public function seek($offset, $whence = self::SEEK_SET)
     {
+        if (empty($this->_handle)) {
+            throw new File_IOException(sprintf("attempt to seek on closed file '%s'", $this->_path));
+        }
+
         if (@fseek($this->_handle, (integer)$offset, (integer)$whence) == -1) {
             throw new File_IOException(sprintf("could not seek to requested offset in file '%s'", $this->_path));
         }
