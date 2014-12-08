@@ -303,7 +303,9 @@ class File implements IteratorAggregate
         }
 
         if ($this->_options['encoding']) {
-            $str = $this->_convertEncoding($str, $this->_options['encoding']);
+            if (($str = iconv($this->_options['encoding'], 'utf-8', $str)) === false) {
+                throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
+            }
         }
 
         if ($this->_options['filter']) {
@@ -361,7 +363,9 @@ class File implements IteratorAggregate
         }
 
         if ($this->_options['encoding']) {
-            $str = $this->_convertEncoding($str, 'utf-8');
+            if (($str = iconv('utf-8', $this->_options['encoding'], (string)$str)) === false) {
+                throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
+            }
         }
 
         if ($numBytes !== null) {
@@ -654,32 +658,6 @@ class File implements IteratorAggregate
         }
 
         $this->_options[$name] = $value;
-    }
-
-    // }}}
-    // {{{ _convertEncoding()
-
-    /**
-     * Converts the given string to the encoding specified by the 'encoding'
-     * runtime configuration option
-     *
-     * @param  string  $str The string to convert
-     * @param  string  $encoding The string encoding
-     * @return string  The converted string
-     * @throws File_EncodingException
-     * @since  1.0
-     */
-    protected function _convertEncoding($str, $encoding)
-    {
-        if (in_array(strtolower($encoding), array('utf-8', 'utf8'))) {
-            return $str;
-        }
-
-        if (($str = iconv($encoding, $encoding == $this->_options['encoding'] ? 'utf-8' : $this->_options['encoding'], (string)$str)) === false) {
-            throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
-        }
-
-        return $str;
     }
 
     // }}}
