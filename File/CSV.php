@@ -281,7 +281,7 @@ class File_CSV extends File
         }
 
         if ($this->_options['encoding']) {
-            $row = $this->_convertEncoding($row, $this->_options['encoding']);
+            $row = $this->_convertEncoding($row, 'utf-8');
         }
 
         if ($this->_options['filter']) {
@@ -315,7 +315,7 @@ class File_CSV extends File
         }
 
         if ($this->_options['encoding']) {
-            $row = $this->_convertEncoding($row, 'utf-8');
+            $row = $this->_convertEncoding((array)$row, $this->_options['encoding']);
         }
 
         $numBytesWritten = @fputcsv(
@@ -336,24 +336,30 @@ class File_CSV extends File
     // {{{ _convertEncoding()
 
     /**
-     * Converts the elements of the given array to the encoding specified by the
-     * 'encoding' runtime configuration option
+     * Converts the elements of the given array from/to the encoding specified by
+     * the 'encoding' runtime configuration option
      *
      * @param  array   $row The array to convert
-     * @param  string  $encoding The encoding of the elements of the array to convert
+     * @param  string  $encoding The encoding to convert the elements of the array to
      * @return array   The converted array
      * @throws File_EncodingException
      * @since  1.0
      */
     protected function _convertEncoding($row, $encoding)
     {
-        if (in_array(strtolower($encoding), array('utf-8', 'utf8'))) {
+        if (in_array(strtolower($this->_options['encoding']), array('utf-8', 'utf8'))) {
             return $row;
         }
 
-        for ($i = 0; $i < count((array)$row); $i++) {
-            if (($row[$i] = iconv($encoding, $encoding == $this->_options['encoding'] ? 'utf-8' : $this->_options['encoding'], (string)$row[$i])) === false) {
-                throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
+        foreach ($row as &$value) {
+            if ($encoding == $this->_options['encoding']) {
+                if (($value = iconv('utf-8', $this->_options['encoding'], (string)$value)) === false) {
+                    throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
+                }
+            } else {
+                if (($value = iconv($this->_options['encoding'], 'utf-8', (string)$value)) === false) {
+                    throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
+                }
             }
         }
 
@@ -378,8 +384,8 @@ class File_CSV extends File
             throw new File_FilterException('filter is not a valid callback');
         }
 
-        for ($i = 0; $i < count((array)$row); $i++) {
-            if (($row[$i] = @call_user_func($this->_options['filter'], (string)$row[$i])) === false) {
+        foreach ($row as &$value) {
+            if (($value = @call_user_func($this->_options['filter'], (string)$value)) === false) {
                 throw new File_FilterException('failed to call filter callback');
             }
         }
