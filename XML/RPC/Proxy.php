@@ -95,7 +95,7 @@ class XML_RPC_Proxy
     public function __construct($url, $options = array())
     {
         if (!filter_var((string)$url, FILTER_VALIDATE_URL)) {
-            throw new XML_RPC_Proxy_InvalidURLException(sprintf("'%s' is not valid url", $url));
+            throw new XML_RPC_Proxy_InvalidURLException(sprintf("'%s' is not a valid url", $url));
         }
 
         $this->_url = (string)$url;
