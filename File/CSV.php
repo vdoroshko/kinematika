@@ -261,6 +261,10 @@ class File_CSV extends File
      */
     protected function _getRow()
     {
+        if (empty($this->_handle)) {
+            throw new File_IOException(sprintf("attempted to read from closed file '%s'", $this->_path));
+        }
+
         if (preg_match('/^[waxc][bt]?$/', $this->_mode)) {
             throw new File_IOException(sprintf("file '%s' is not open for reading", $this->_path));
         }
@@ -306,6 +310,10 @@ class File_CSV extends File
      */
     protected function _putRow($row)
     {
+        if (empty($this->_handle)) {
+            throw new File_IOException(sprintf("attempted to write to closed file '%s'", $this->_path));
+        }
+
         if (preg_match('/^[r][bt]?$/', $this->_mode)) {
             throw new File_IOException(sprintf("file '%s' is not open for writing", $this->_path));
         }
