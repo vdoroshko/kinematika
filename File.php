@@ -306,7 +306,7 @@ class File implements IteratorAggregate
             $str = $this->_convertEncoding($str, $this->_options['encoding']);
         }
 
-        if (is_callable($this->_options['filter'])) {
+        if ($this->_options['filter']) {
             $str = $this->_applyFilter($str);
         }
 
@@ -356,7 +356,7 @@ class File implements IteratorAggregate
             throw new File_IOException(sprintf("file '%s' is not open for writing", $this->_path));
         }
 
-        if (is_callable($this->_options['filter'])) {
+        if ($this->_options['filter']) {
             $str = $this->_applyFilter($str);
         }
 
@@ -696,8 +696,12 @@ class File implements IteratorAggregate
      */
     protected function _applyFilter($str)
     {
-        if (($str = call_user_func($this->_options['filter'], (string)$str)) === false) {
-            throw new File_FilterException(sprintf('function %s() does not exist or could not be called', $this->_options['filter']));
+        if (!is_callable($this->_options['filter'])) {
+            throw new File_FilterException('filter is not a valid callback');
+        }
+
+        if (($str = @call_user_func($this->_options['filter'], (string)$str)) === false) {
+            throw new File_FilterException('failed to call filter callback');
         }
 
         return $str;

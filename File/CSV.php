@@ -284,7 +284,7 @@ class File_CSV extends File
             $row = $this->_convertEncoding($row, $this->_options['encoding']);
         }
 
-        if (is_callable($this->_options['filter'])) {
+        if ($this->_options['filter']) {
             $row = $this->_applyFilter($row);
         }
 
@@ -310,7 +310,7 @@ class File_CSV extends File
             throw new File_IOException(sprintf("file '%s' is not open for writing", $this->_path));
         }
 
-        if (is_callable($this->_options['filter'])) {
+        if ($this->_options['filter']) {
             $row = $this->_applyFilter($row);
         }
 
@@ -374,9 +374,13 @@ class File_CSV extends File
      */
     protected function _applyFilter($row)
     {
+        if (!is_callable($this->_options['filter'])) {
+            throw new File_FilterException('filter is not a valid callback');
+        }
+
         for ($i = 0; $i < count((array)$row); $i++) {
-            if (($row[$i] = call_user_func($this->_options['filter'], (string)$row[$i])) === false) {
-                throw new File_FilterException(sprintf('function %s() does not exist or could not be called', $this->_options['filter']));
+            if (($row[$i] = @call_user_func($this->_options['filter'], (string)$row[$i])) === false) {
+                throw new File_FilterException('failed to call filter callback');
             }
         }
 
