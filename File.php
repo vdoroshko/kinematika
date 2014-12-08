@@ -893,8 +893,7 @@ class File_EncodingException extends File_IOException {}
 // {{{ class File_FilterException
 
 /**
- * Exception class that is thrown when a callback filter function execution
- * failed
+ * Exception class that is thrown when a filter callback execution failed
  *
  * @category   File System
  * @package    File
