@@ -147,7 +147,7 @@ class File implements IteratorAggregate
             $useIncludePath = false;
         }
 
-        if (!($handle = @fopen((string)$path, (string)$mode, $useIncludePath))) {
+        if (($handle = @fopen((string)$path, (string)$mode, $useIncludePath)) === false) {
             if (!self::exists($path, $useIncludePath)) {
                 throw new File_NotFoundException(sprintf("file '%s' not found", $path));
             }
@@ -230,7 +230,7 @@ class File implements IteratorAggregate
             throw new File_NotFoundException(sprintf("directory '%s' does not exist", $dir));
         }
 
-        if (!($path = @tempnam((string)$dir, (string)$prefix))) {
+        if (($path = @tempnam((string)$dir, (string)$prefix)) === false) {
             throw new File_IOException(sprintf("could not create temporary file in directory '%s'", $dir));
         }
 

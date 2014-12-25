@@ -142,7 +142,7 @@ class File_CSV extends File
             throw new File_NotFoundException(sprintf("directory '%s' does not exist", $dir));
         }
 
-        if (!($path = @tempnam((string)$dir, (string)$prefix))) {
+        if (($path = @tempnam((string)$dir, (string)$prefix)) === false) {
             throw new File_IOException(sprintf("could not create temporary file in directory '%s'", $dir));
         }
 
