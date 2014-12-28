@@ -45,6 +45,7 @@
  * @link       https://github.com/vdoroshko/kinematika
  * @since      1.0
  */
+require_once 'XML/RPC/Exception.php';
 
 // {{{ classes
 // {{{ class XML_RPC_Proxy
@@ -91,12 +92,12 @@ class XML_RPC_Proxy
      * @param  array   $options (optional) The runtime configuration options
      * @throws DomainException
      * @throws InvalidArgumentException
-     * @throws XML_RPC_Proxy_InvalidURLException
+     * @throws XML_RPC_InvalidURLException
      */
     public function __construct($url, $options = array())
     {
         if (!filter_var((string)$url, FILTER_VALIDATE_URL)) {
-            throw new XML_RPC_Proxy_InvalidURLException(sprintf("'%s' is not a valid URL", $url));
+            throw new XML_RPC_InvalidURLException(sprintf("'%s' is not a valid URL", $url));
         }
 
         $this->_url = (string)$url;
@@ -233,16 +234,16 @@ class XML_RPC_Proxy
      * @param  string  $name The method to call
      * @param  array   $arguments An array of arguments to pass to the method
      * @return mixed   The method result decoded into native PHP types
-     * @throws XML_RPC_Proxy_BadMethodCallException
-     * @throws XML_RPC_Proxy_FaultException
-     * @throws XML_RPC_Proxy_IOException
-     * @throws XML_RPC_Proxy_NotAllowedException
+     * @throws XML_RPC_BadMethodCallException
+     * @throws XML_RPC_FaultException
+     * @throws XML_RPC_IOException
+     * @throws XML_RPC_NotAllowedException
      * @since  1.0
      */
     public function __call($name, $arguments)
     {
         if (!ini_get('allow_url_fopen')) {
-            throw new XML_RPC_Proxy_NotAllowedException('remote access is disabled in the local server configuration');
+            throw new XML_RPC_NotAllowedException('remote access is disabled in the local server configuration');
         }
 
         $method = ($this->_options['namespace'] ? $this->_options['namespace'] . '.' : '') . $name;
@@ -264,16 +265,16 @@ class XML_RPC_Proxy
 
         $context = stream_context_create($options);
         if (($response = @file_get_contents($this->_url, false, $context)) === false) {
-            throw new XML_RPC_Proxy_IOException(sprintf("unable to communicate with server at '%s'", $this->_url));
+            throw new XML_RPC_IOException(sprintf("unable to communicate with server at '%s'", $this->_url));
         }
 
         $result = xmlrpc_decode($response, $this->_options['encoding']);
         if (xmlrpc_is_fault($result)) {
             if ($result['faultCode'] == -32601) {
-                throw new XML_RPC_Proxy_BadMethodCallException(sprintf('method %s() does not exist', $method));
+                throw new XML_RPC_BadMethodCallException(sprintf('method %s() does not exist', $method));
             }
 
-            throw new XML_RPC_Proxy_FaultException($result['faultString'], $result['faultCode']);
+            throw new XML_RPC_FaultException($result['faultString'], $result['faultCode']);
         }
 
         return $result;
@@ -302,127 +303,6 @@ class XML_RPC_Proxy
 
     // }}}
 }
-
-// }}}
-// {{{ class XML_RPC_Proxy_Exception
-
-/**
- * Base class for all XML-RPC exceptions
- *
- * @category   Web Services
- * @package    XML_RPC_Proxy
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class XML_RPC_Proxy_Exception extends RuntimeException {}
-
-// }}}
-// {{{ class XML_RPC_Proxy_BadMethodCallException
-
-/**
- * Exception class that is thrown when an attempt to invoke a method that does
- * not exist fails
- *
- * @category   Web Services
- * @package    XML_RPC_Proxy
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class XML_RPC_Proxy_BadMethodCallException extends XML_RPC_Proxy_Exception {}
-
-// }}}
-// {{{ class XML_RPC_Proxy_FaultException
-
-/**
- * Exception class that is thrown when XML-RPC server returns a fault response
- *
- * @category   Web Services
- * @package    XML_RPC_Proxy
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class XML_RPC_Proxy_FaultException extends XML_RPC_Proxy_Exception
-{
-    // {{{ constructor
-
-    /**
-     * Constructs a new XML_RPC_Proxy_FaultException object
-     *
-     * @param  string  $message The fault message
-     * @param  integer $code (optional) The fault code
-     */
-    public function __construct($message, $code = 0)
-    {
-        parent::__construct((string)$message, (integer)$code);
-    }
-
-    // }}}
-}
-
-// }}}
-// {{{ class XML_RPC_Proxy_IOException
-
-/**
- * Exception class that is thrown when a communications failure occurs during
- * a remote operation
- *
- * @category   Web Services
- * @package    XML_RPC_Proxy
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class XML_RPC_Proxy_IOException extends XML_RPC_Proxy_Exception {}
-
-// }}}
-// {{{ class XML_RPC_Proxy_InvalidURLException
-
-/**
- * Exception class that is thrown when specified URL is invalid
- *
- * @category   Web Services
- * @package    XML_RPC_Proxy
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class XML_RPC_Proxy_InvalidURLException extends XML_RPC_Proxy_Exception {}
-
-// }}}
-// {{{ class XML_RPC_Proxy_NotAllowedException
-
-/**
- * Exception class that is thrown to indicate that remote access is disabled
- * in the local server configuration
- *
- * @category   Web Services
- * @package    XML_RPC_Proxy
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class XML_RPC_Proxy_NotAllowedException extends XML_RPC_Proxy_Exception {}
 
 // }}}
 // }}}
