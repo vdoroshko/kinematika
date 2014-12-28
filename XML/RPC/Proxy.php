@@ -321,24 +321,6 @@ class XML_RPC_Proxy
 class XML_RPC_Proxy_Exception extends RuntimeException {}
 
 // }}}
-// {{{ class XML_RPC_Proxy_IOException
-
-/**
- * Exception class that is thrown when a communications failure occurs during
- * a remote operation
- *
- * @category   Web Services
- * @package    XML_RPC_Proxy
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class XML_RPC_Proxy_IOException extends XML_RPC_Proxy_Exception {}
-
-// }}}
 // {{{ class XML_RPC_Proxy_BadMethodCallException
 
 /**
@@ -388,6 +370,24 @@ class XML_RPC_Proxy_FaultException extends XML_RPC_Proxy_Exception
 
     // }}}
 }
+
+// }}}
+// {{{ class XML_RPC_Proxy_IOException
+
+/**
+ * Exception class that is thrown when a communications failure occurs during
+ * a remote operation
+ *
+ * @category   Web Services
+ * @package    XML_RPC_Proxy
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2014 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class XML_RPC_Proxy_IOException extends XML_RPC_Proxy_Exception {}
 
 // }}}
 // {{{ class XML_RPC_Proxy_InvalidURLException
