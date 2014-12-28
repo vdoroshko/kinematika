@@ -235,8 +235,8 @@ class XML_RPC_Proxy
      * @return mixed   The method result decoded into native PHP types
      * @throws XML_RPC_Proxy_BadMethodCallException
      * @throws XML_RPC_Proxy_FaultException
-     * @throws XML_RPC_Proxy_NotAllowedException
      * @throws XML_RPC_Proxy_IOException
+     * @throws XML_RPC_Proxy_NotAllowedException
      * @since  1.0
      */
     public function __call($name, $arguments)
@@ -304,6 +304,23 @@ class XML_RPC_Proxy
 }
 
 // }}}
+// {{{ class XML_RPC_Proxy_Exception
+
+/**
+ * Base class for all XML-RPC exceptions
+ *
+ * @category   Web Services
+ * @package    XML_RPC_Proxy
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2014 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class XML_RPC_Proxy_Exception extends RuntimeException {}
+
+// }}}
 // {{{ class XML_RPC_Proxy_IOException
 
 /**
@@ -319,7 +336,7 @@ class XML_RPC_Proxy
  * @link       https://github.com/vdoroshko/kinematika
  * @since      1.0
  */
-class XML_RPC_Proxy_IOException extends RuntimeException {}
+class XML_RPC_Proxy_IOException extends XML_RPC_Proxy_Exception {}
 
 // }}}
 // {{{ class XML_RPC_Proxy_BadMethodCallException
@@ -337,7 +354,7 @@ class XML_RPC_Proxy_IOException extends RuntimeException {}
  * @link       https://github.com/vdoroshko/kinematika
  * @since      1.0
  */
-class XML_RPC_Proxy_BadMethodCallException extends XML_RPC_Proxy_IOException {}
+class XML_RPC_Proxy_BadMethodCallException extends XML_RPC_Proxy_Exception {}
 
 // }}}
 // {{{ class XML_RPC_Proxy_FaultException
@@ -354,7 +371,7 @@ class XML_RPC_Proxy_BadMethodCallException extends XML_RPC_Proxy_IOException {}
  * @link       https://github.com/vdoroshko/kinematika
  * @since      1.0
  */
-class XML_RPC_Proxy_FaultException extends XML_RPC_Proxy_IOException
+class XML_RPC_Proxy_FaultException extends XML_RPC_Proxy_Exception
 {
     // {{{ constructor
 
@@ -387,7 +404,7 @@ class XML_RPC_Proxy_FaultException extends XML_RPC_Proxy_IOException
  * @link       https://github.com/vdoroshko/kinematika
  * @since      1.0
  */
-class XML_RPC_Proxy_InvalidURLException extends XML_RPC_Proxy_IOException {}
+class XML_RPC_Proxy_InvalidURLException extends XML_RPC_Proxy_Exception {}
 
 // }}}
 // {{{ class XML_RPC_Proxy_NotAllowedException
@@ -405,7 +422,7 @@ class XML_RPC_Proxy_InvalidURLException extends XML_RPC_Proxy_IOException {}
  * @link       https://github.com/vdoroshko/kinematika
  * @since      1.0
  */
-class XML_RPC_Proxy_NotAllowedException extends XML_RPC_Proxy_IOException {}
+class XML_RPC_Proxy_NotAllowedException extends XML_RPC_Proxy_Exception {}
 
 // }}}
 // }}}
