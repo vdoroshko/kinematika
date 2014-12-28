@@ -263,7 +263,7 @@ class XML_RPC_Proxy
         );
 
         $context = stream_context_create($options);
-        if (($response = file_get_contents($this->_url, false, $context)) === false) {
+        if (($response = @file_get_contents($this->_url, false, $context)) === false) {
             throw new XML_RPC_Proxy_IOException(sprintf("unable to communicate with server at '%s'", $this->_url));
         }
 
