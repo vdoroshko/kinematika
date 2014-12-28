@@ -90,18 +90,20 @@ class XML_RPC_Proxy
      * @param  string  $url The URL of the XML-RPC server to connect
      * @param  array   $options (optional) The runtime configuration options
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @throws XML_RPC_Proxy_InvalidURLException
      */
     public function __construct($url, $options = array())
     {
         if (!filter_var((string)$url, FILTER_VALIDATE_URL)) {
-            throw new XML_RPC_Proxy_InvalidURLException(sprintf("'%s' is not a valid url", $url));
+            throw new XML_RPC_Proxy_InvalidURLException(sprintf("'%s' is not a valid URL", $url));
         }
 
         $this->_url = (string)$url;
 
         $this->_registerOption('namespace');
-        $this->_registerOption('charset', 'utf-8');
+        $this->_registerOption('encoding', 'iso-8859-1');
+        $this->_registerOption('escaping', array('markup', 'non-ascii', 'non-print'));
 
         $this->setOptions($options);
     }
@@ -162,6 +164,7 @@ class XML_RPC_Proxy
      * @param  string  $value The option value
      * @return void
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @since  1.0
      */
     public function setOption($name, $value)
@@ -170,7 +173,36 @@ class XML_RPC_Proxy
             throw new DomainException(sprintf("unknown option '%s'", $name));
         }
 
-        $this->_options[(string)$name] = (string)$value;
+        switch ((string)$name) {
+            case 'encoding':
+                if (empty($value)) {
+                    throw new InvalidArgumentException('encoding cannot be empty');
+                }
+
+                if (iconv('iso-8859-1', (string)$value, 'encoding') === false) {
+                    throw new DomainException(sprintf("'%s' is not valid encoding", $value));
+                }
+
+                $this->_options[(string)$name] = (string)$value;
+                break;
+
+            case 'escaping':
+                if (empty($value)) {
+                    throw new InvalidArgumentException('escaping cannot be empty');
+                }
+
+                foreach ((array)$value as $escaping) {
+                    if (!in_array((string)$escaping, array('cdata', 'markup', 'non-ascii', 'non-print'))) {
+                        throw new DomainException('escaping can be one or more of the following: cdata, markup, non-ascii, non-print');
+                    }
+                }
+
+                $this->_options[(string)$name] = array_values((array)$value);
+                break;
+
+            default:
+                $this->_options[(string)$name] = $value ? (string)$value : null;
+        }
     }
 
     // }}}
@@ -182,6 +214,7 @@ class XML_RPC_Proxy
      * @param  array   $options An associative array of the options
      * @return void
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @since  1.0
      */
     public function setOptions($options)
@@ -192,22 +225,6 @@ class XML_RPC_Proxy
     }
 
     // }}}
-    // {{{ isFault()
-
-    /**
-     * Determines if the given array represents an XML-RPC fault
-     *
-     * @param  array   $result An array to check
-     * @return boolean true if the array represents an XML-RPC fault or false
-     *                 otherwise
-     * @since  1.0
-     */
-    public static function isFault($result)
-    {
-        return xmlrpc_is_fault((array)$result);
-    }
-
-    // }}}
     // {{{ __call()
 
     /**
@@ -215,35 +232,48 @@ class XML_RPC_Proxy
      *
      * @param  string  $name The method to call
      * @param  array   $arguments An array of arguments to pass to the method
-     * @return mixed   The method result decoded into native PHP types or an
-     *                 associative array representing an XML-RPC fault
-     * @throws BadMethodCallException
+     * @return mixed   The method result decoded into native PHP types
+     * @throws XML_RPC_Proxy_BadMethodCallException
+     * @throws XML_RPC_Proxy_FaultException
+     * @throws XML_RPC_Proxy_NotAllowedException
      * @throws XML_RPC_Proxy_IOException
      * @since  1.0
      */
     public function __call($name, $arguments)
     {
+        if (!ini_get('allow_url_fopen')) {
+            throw new XML_RPC_Proxy_NotAllowedException('remote access is disabled in the local server configuration');
+        }
+
         $method = ($this->_options['namespace'] ? $this->_options['namespace'] . '.' : '') . $name;
-        $request = xmlrpc_encode_request($method, $arguments);
+
+        $options = array(
+            'encoding' => $this->_options['encoding'],
+            'escaping' => $this->_options['escaping']
+        );
+
+        $request = xmlrpc_encode_request($method, $arguments, $options);
 
         $options = array(
            'http' => array(
                'method'  => 'POST',
-               'header'  => sprintf('Content-Type: text/xml; charset=%s', $this->_options['charset']),
+               'header'  => sprintf('Content-Type: text/xml; charset=%s', $this->_options['encoding']),
                'content' => $request
            )
         );
 
         $context = stream_context_create($options);
-        if (!($response = @file_get_contents($this->_url, false, $context))) {
+        if (($response = file_get_contents($this->_url, false, $context)) === false) {
             throw new XML_RPC_Proxy_IOException(sprintf("unable to communicate with server at '%s'", $this->_url));
         }
 
-        $result = xmlrpc_decode($response);
-        if (self::isFault($result)) {
+        $result = xmlrpc_decode($response, $this->_options['encoding']);
+        if (xmlrpc_is_fault($result)) {
             if ($result['faultCode'] == -32601) {
-                throw new BadMethodCallException(sprintf('method %s() does not exist', trim($method)));
+                throw new XML_RPC_Proxy_BadMethodCallException(sprintf('method %s() does not exist', $method));
             }
+
+            throw new XML_RPC_Proxy_FaultException($result['faultString'], $result['faultCode']);
         }
 
         return $result;
@@ -292,6 +322,57 @@ class XML_RPC_Proxy
 class XML_RPC_Proxy_IOException extends RuntimeException {}
 
 // }}}
+// {{{ class XML_RPC_Proxy_BadMethodCallException
+
+/**
+ * Exception class that is thrown when an attempt to invoke a method that does
+ * not exist fails
+ *
+ * @category   Web Services
+ * @package    XML_RPC_Proxy
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2014 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class XML_RPC_Proxy_BadMethodCallException extends XML_RPC_Proxy_IOException {}
+
+// }}}
+// {{{ class XML_RPC_Proxy_FaultException
+
+/**
+ * Exception class that is thrown when XML-RPC server returns a fault response
+ *
+ * @category   Web Services
+ * @package    XML_RPC_Proxy
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2014 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class XML_RPC_Proxy_FaultException extends XML_RPC_Proxy_IOException
+{
+    // {{{ constructor
+
+    /**
+     * Constructs a new XML_RPC_Proxy_FaultException object
+     *
+     * @param  string  $message The fault message
+     * @param  integer $code (optional) The fault code
+     */
+    public function __construct($message, $code = 0)
+    {
+        parent::__construct((string)$message, (integer)$code);
+    }
+
+    // }}}
+}
+
+// }}}
 // {{{ class XML_RPC_Proxy_InvalidURLException
 
 /**
@@ -307,6 +388,24 @@ class XML_RPC_Proxy_IOException extends RuntimeException {}
  * @since      1.0
  */
 class XML_RPC_Proxy_InvalidURLException extends XML_RPC_Proxy_IOException {}
+
+// }}}
+// {{{ class XML_RPC_Proxy_NotAllowedException
+
+/**
+ * Exception class that is thrown to indicate that remote access is disabled
+ * in the local server configuration
+ *
+ * @category   Web Services
+ * @package    XML_RPC_Proxy
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2014 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class XML_RPC_Proxy_NotAllowedException extends XML_RPC_Proxy_IOException {}
 
 // }}}
 // }}}
