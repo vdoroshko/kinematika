@@ -132,12 +132,13 @@ class File implements IteratorAggregate
      * @param  string  $mode The file access mode
      * @param  array   $options The runtime configuration options
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @throws File_NotFoundException
      * @throws File_IOException
      */
     protected function __construct($path, $mode, $options)
     {
-        if (!preg_match('/[rwaxc][bt]?\+?/', (string)$mode)) {
+        if (!preg_match('/^[rwaxc][bt]?\+?$/', (string)$mode)) {
             throw new DomainException(sprintf("invalid access mode '%s'", $mode));
         }
 
@@ -148,8 +149,10 @@ class File implements IteratorAggregate
         }
 
         if (($handle = @fopen((string)$path, (string)$mode, $useIncludePath)) === false) {
-            if (!self::exists($path, $useIncludePath)) {
-                throw new File_NotFoundException(sprintf("file '%s' not found", $path));
+            if (preg_match('/^[r][bt]?\+?$/', (string)$mode)) {
+                if (!self::exists($path, $useIncludePath)) {
+                    throw new File_NotFoundException(sprintf("file '%s' not found", $path));
+                }
             }
 
             throw new File_IOException(sprintf("could not open file '%s'", $path));
@@ -190,6 +193,7 @@ class File implements IteratorAggregate
      * @param  array   $options (optional) The runtime configuration options
      * @return object  A new File object
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @throws File_NotFoundException
      * @throws File_IOException
      * @since  1.0
@@ -220,6 +224,7 @@ class File implements IteratorAggregate
      * @param  array   $options (optional) The runtime configuration options
      * @return object  A new File object
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @throws File_NotFoundException
      * @throws File_IOException
      * @since  1.0
@@ -308,7 +313,7 @@ class File implements IteratorAggregate
 
         if ($this->_options['encoding']) {
             if (($str = iconv($this->_options['encoding'], 'utf-8', $str)) === false) {
-                throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
+                throw new File_EncodingException(sprintf("could not convert from encoding '%s' to 'utf-8'", $this->_options['encoding']));
             }
         }
 
@@ -372,7 +377,7 @@ class File implements IteratorAggregate
 
         if ($this->_options['encoding']) {
             if (($str = iconv('utf-8', $this->_options['encoding'], (string)$str)) === false) {
-                throw new File_EncodingException(sprintf("'%s' is not valid encoding", $this->_options['encoding']));
+                throw new File_EncodingException(sprintf("could not convert from encoding 'utf-8' to '%s'", $this->_options['encoding']));
             }
         }
 
@@ -610,6 +615,7 @@ class File implements IteratorAggregate
      * @param  mixed   $value The option value
      * @return void
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @since  1.0
      */
     public function setOption($name, $value)
@@ -618,18 +624,35 @@ class File implements IteratorAggregate
             throw new DomainException(sprintf("unknown option '%s'", $name));
         }
 
-        switch (gettype($this->_options[(string)$name])) {
-            case 'NULL':
-            case 'array':
-                $this->_options[(string)$name] = $value;
+        switch ((string)$name) {
+            case 'encoding':
+                if ($value) {
+                    if (iconv('utf-8', (string)$value, 'encoding') === false) {
+                        throw new DomainException(sprintf("'%s' is not valid encoding", $value));
+                    }
+
+                    $this->_options[(string)$name] = (string)$value;
+                } else {
+                    $this->_options[(string)$name] = null;
+                }
+
                 break;
 
-            case 'integer':
-                $this->_options[(string)$name] = (integer)$value;
+            case 'filter':
+                if ($value) {
+                    if (!is_callable($value)) {
+                        throw new InvalidArgumentException('filter is not a valid callback');
+                    }
+
+                    $this->_options[(string)$name] = $value;
+                } else {
+                    $this->_options[(string)$name] = null;
+                }
+
                 break;
 
             default:
-                $this->_options[(string)$name] = (string)$value;
+                $this->_options[(string)$name] = (boolean)$value;
         }
     }
 
@@ -642,6 +665,7 @@ class File implements IteratorAggregate
      * @param  array   $options An associative array of the options
      * @return void
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @since  1.0
      */
     public function setOptions($options)
@@ -686,10 +710,6 @@ class File implements IteratorAggregate
      */
     protected function _applyFilter($str)
     {
-        if (!is_callable($this->_options['filter'])) {
-            throw new File_FilterException('filter is not a valid callback');
-        }
-
         if (($str = @call_user_func($this->_options['filter'], (string)$str)) === false) {
             throw new File_FilterException('failed to call filter callback');
         }
