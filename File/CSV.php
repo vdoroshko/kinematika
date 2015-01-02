@@ -74,6 +74,7 @@ class File_CSV extends File
      * @param  string  $mode The file access mode
      * @param  array   $options The runtime configuration options
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
@@ -107,6 +108,7 @@ class File_CSV extends File
      * @param  array   $options (optional) The runtime configuration options
      * @return object  A new File_CSV object
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
@@ -138,6 +140,7 @@ class File_CSV extends File
      * @param  array   $options (optional) The runtime configuration options
      * @return object  A new File_CSV object
      * @throws DomainException
+     * @throws InvalidArgumentException
      * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
