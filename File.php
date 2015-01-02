@@ -6,7 +6,7 @@
  *
  * PHP version 5
  *
- * Copyright (c) 2005-2014, Vitaly Doroshko
+ * Copyright (c) 2005-2015, Vitaly Doroshko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
  * @category   File System
  * @package    File
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2005-2014 Vitaly Doroshko
+ * @copyright  2005-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @version    1.0
@@ -55,7 +55,7 @@
  * @category   File System
  * @package    File
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2005-2014 Vitaly Doroshko
+ * @copyright  2005-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
@@ -133,11 +133,16 @@ class File implements IteratorAggregate
      * @param  array   $options The runtime configuration options
      * @throws DomainException
      * @throws InvalidArgumentException
+     * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      */
     protected function __construct($path, $mode, $options)
     {
+        if (empty($path)) {
+            throw new File_InvalidPathException('file path cannot be empty');
+        }
+
         if (!preg_match('/^[rwaxc][bt]?\+?$/', (string)$mode)) {
             throw new DomainException(sprintf("invalid access mode '%s'", $mode));
         }
@@ -194,6 +199,7 @@ class File implements IteratorAggregate
      * @return object  A new File object
      * @throws DomainException
      * @throws InvalidArgumentException
+     * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      * @since  1.0
@@ -225,12 +231,17 @@ class File implements IteratorAggregate
      * @return object  A new File object
      * @throws DomainException
      * @throws InvalidArgumentException
+     * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      * @since  1.0
      */
     public static function createTemporary($dir, $prefix = '', $mode = 'w', $options = array())
     {
+        if (empty($dir)) {
+            throw new File_InvalidPathException('directory path cannot be empty');
+        }
+
         if (!self::exists($dir)) {
             throw new File_NotFoundException(sprintf("directory '%s' does not exist", $dir));
         }
@@ -729,7 +740,7 @@ class File implements IteratorAggregate
  * @category   File System
  * @package    File
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2005-2014 Vitaly Doroshko
+ * @copyright  2005-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
@@ -873,7 +884,7 @@ class File_Iterator implements Iterator
  * @category   File System
  * @package    File
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2005-2014 Vitaly Doroshko
+ * @copyright  2005-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
@@ -891,7 +902,7 @@ class File_IOException extends RuntimeException {}
  * @category   File System
  * @package    File
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2005-2014 Vitaly Doroshko
+ * @copyright  2005-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
@@ -908,13 +919,30 @@ class File_EncodingException extends File_IOException {}
  * @category   File System
  * @package    File
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2005-2014 Vitaly Doroshko
+ * @copyright  2005-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
  * @since      1.0
  */
 class File_FilterException extends File_IOException {}
+
+// }}}
+// {{{ class File_InvalidPathException
+
+/**
+ * Exception class that is thrown when path to a file is invalid
+ *
+ * @category   File System
+ * @package    File
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2005-2015 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class File_InvalidPathException extends File_IOException {}
 
 // }}}
 // {{{ class File_NotFoundException
@@ -926,7 +954,7 @@ class File_FilterException extends File_IOException {}
  * @category   File System
  * @package    File
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2005-2014 Vitaly Doroshko
+ * @copyright  2005-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
@@ -944,7 +972,7 @@ class File_NotFoundException extends File_IOException {}
  * @category   File System
  * @package    File
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2005-2014 Vitaly Doroshko
+ * @copyright  2005-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
