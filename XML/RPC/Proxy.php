@@ -6,7 +6,7 @@
  *
  * PHP version 5
  *
- * Copyright (c) 2014, Vitaly Doroshko
+ * Copyright (c) 2014, 2015, Vitaly Doroshko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
  * @category   Web Services
  * @package    XML_RPC_Proxy
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
+ * @copyright  2014, 2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @version    1.0
@@ -56,7 +56,7 @@ require_once 'XML/RPC/Exception.php';
  * @category   Web Services
  * @package    XML_RPC_Proxy
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014 Vitaly Doroshko
+ * @copyright  2014, 2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
@@ -96,6 +96,10 @@ class XML_RPC_Proxy
      */
     public function __construct($url, $options = array())
     {
+        if (empty($url)) {
+            throw new XML_RPC_InvalidURLException('URL cannot be empty');
+        }
+
         if (!filter_var((string)$url, FILTER_VALIDATE_URL)) {
             throw new XML_RPC_InvalidURLException(sprintf("'%s' is not a valid URL", $url));
         }
