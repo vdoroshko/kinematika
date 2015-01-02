@@ -6,7 +6,7 @@
  *
  * PHP version 5
  *
- * Copyright (c) 2011-2014, Vitaly Doroshko
+ * Copyright (c) 2011-2015, Vitaly Doroshko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
  * @category   File Formats
  * @package    File_CSV
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2011-2014 Vitaly Doroshko
+ * @copyright  2011-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @version    1.0
@@ -56,7 +56,7 @@ require_once 'File.php';
  * @category   File Formats
  * @package    File_CSV
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2011-2014 Vitaly Doroshko
+ * @copyright  2011-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
@@ -74,11 +74,16 @@ class File_CSV extends File
      * @param  string  $mode The file access mode
      * @param  array   $options The runtime configuration options
      * @throws DomainException
+     * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      */
     protected function __construct($path, $mode, $options)
     {
+        if (empty($path)) {
+            throw new File_InvalidPathException('file path cannot be empty');
+        }
+
         if (!preg_match('/^([r]|[waxc])[bt]?$/', (string)$mode)) {
             throw new DomainException('access mode can be either read or write');
         }
@@ -102,6 +107,7 @@ class File_CSV extends File
      * @param  array   $options (optional) The runtime configuration options
      * @return object  A new File_CSV object
      * @throws DomainException
+     * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      * @since  1.0
@@ -132,12 +138,17 @@ class File_CSV extends File
      * @param  array   $options (optional) The runtime configuration options
      * @return object  A new File_CSV object
      * @throws DomainException
+     * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      * @since  1.0
      */
     public static function createTemporary($dir, $prefix = '', $mode = 'w', $options = array())
     {
+        if (empty($dir)) {
+            throw new File_InvalidPathException('directory path cannot be empty');
+        }
+
         if (!self::exists($dir)) {
             throw new File_NotFoundException(sprintf("directory '%s' does not exist", $dir));
         }
@@ -413,7 +424,7 @@ class File_CSV extends File
  * @category   File Formats
  * @package    File_CSV
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2011-2014 Vitaly Doroshko
+ * @copyright  2011-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
