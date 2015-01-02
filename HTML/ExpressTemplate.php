@@ -314,11 +314,8 @@ class HTML_ExpressTemplate_FileNotFoundException extends HTML_ExpressTemplate_IO
 // {{{ class HTML_ExpressTemplate_InvalidPathException
 
 /**
- * Exception class that is thrown when specified path to a template file is
- * invalid
- *
- * Exception class that is thrown when specified template file path is invalid
- *
+ * Exception class that is thrown when path to a template file is invalid
+ * 
  * @category   HTML
  * @package    HTML_ExpressTemplate
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
