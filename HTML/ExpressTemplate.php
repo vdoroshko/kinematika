@@ -352,15 +352,15 @@ class HTML_ExpressTemplate_ParseException extends HTML_ExpressTemplate_Exception
      *
      * @param  string  $message The exception message
      * @param  integer $code (optional) The exception code
-     * @param  string  $file (optional) The filename where the exception was created
-     * @param  integer $line (optional) The line where the exception was created
+     * @param  string  $filepath (optional) The file where the exception was thrown
+     * @param  integer $line (optional) The line where the exception was thrown
      */
-    public function __construct($message, $code = 0, $file = null, $line = null)
+    public function __construct($message, $code = 0, $filepath = null, $line = null)
     {
         parent::__construct((string)$message, (integer)$code);
 
-        if ($file) {
-            $this->file = (string)$file;
+        if ($filepath) {
+            $this->file = (string)$filepath;
         }
 
         if ($line !== null) {
