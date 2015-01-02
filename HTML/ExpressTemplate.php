@@ -105,8 +105,8 @@ class HTML_ExpressTemplate
      * Parses the template file and returns the parsed content
      *
      * @return string  The parsed content
-     * @throws HTML_ExpressTemplate_IOException
      * @throws HTML_ExpressTemplate_FileNotFoundException
+     * @throws HTML_ExpressTemplate_IOException
      * @throws HTML_ExpressTemplate_InvalidPathException
      * @throws HTML_ExpressTemplate_ParseException
      * @since  1.0
