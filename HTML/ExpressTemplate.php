@@ -114,7 +114,7 @@ class HTML_ExpressTemplate
     public function render()
     {
         if (empty($this->_filepath)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('template file path is not specified');
+            throw new HTML_ExpressTemplate_InvalidPathException('template file path is not set');
         }
 
         if (($script = @file_get_contents($this->_filepath)) === false) {
