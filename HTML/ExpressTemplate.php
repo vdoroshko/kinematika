@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Simple PHP templating class
+ * Simple templating class
  *
  * PHP version 5
  *
@@ -50,7 +50,7 @@
 // {{{ class HTML_ExpressTemplate
 
 /**
- * Simple PHP templating class
+ * Simple templating class
  *
  * @category   HTML
  * @package    HTML_ExpressTemplate
@@ -315,7 +315,7 @@ class HTML_ExpressTemplate_FileNotFoundException extends HTML_ExpressTemplate_IO
 
 /**
  * Exception class that is thrown when path to a template file is invalid
- * 
+ *
  * @category   HTML
  * @package    HTML_ExpressTemplate
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
