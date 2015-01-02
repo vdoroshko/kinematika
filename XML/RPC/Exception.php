@@ -136,7 +136,7 @@ class XML_RPC_IOException extends XML_RPC_Exception {}
 // {{{ class XML_RPC_InvalidURLException
 
 /**
- * Exception class that is thrown when specified URL is invalid
+ * Exception class that is thrown when URL is invalid
  *
  * @category   Web Services
  * @package    XML_RPC_Exception
