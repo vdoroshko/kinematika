@@ -130,12 +130,12 @@ class HTML_ExpressTemplate
         if (@eval('?>' . $script . '<?php ') === false) {
             if (function_exists('error_get_last')) {
                 if ($errorInfo = error_get_last()) {
-                    $message = sprintf("parse error in template file '%s' on line %d", $this->_filepath, $errorInfo['line']);
+                    $message = sprintf("syntax error in template file '%s' on line %d", $this->_filepath, $errorInfo['line']);
                     throw new HTML_ExpressTemplate_ParseException($message, $errorInfo['type'], $this->_filepath, $errorInfo['line']);
                 }
             }
 
-            throw new HTML_ExpressTemplate_ParseException(sprintf("parse error in template file '%s' on unknown line", $this->_filepath));
+            throw new HTML_ExpressTemplate_ParseException(sprintf("syntax error in template file '%s' on unknown line", $this->_filepath));
         }
 
         $contents = ob_get_contents();
