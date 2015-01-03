@@ -165,7 +165,7 @@ class HTML_ExpressTemplate
     /**
      * Sets the template file to be rendered
      *
-     * @param  string  $filename The filename of the template file
+     * @param  string  $filename The template file to be rendered
      * @return void
      * @throws HTML_ExpressTemplate_InvalidPathException
      * @since  1.0
