@@ -66,7 +66,7 @@ class HTML_ExpressTemplate
     // {{{ protected class properties
 
     /**
-     * Filename of template file
+     * Filename of template file to be rendered
      *
      * @var    string
      * @since  1.0
@@ -148,10 +148,10 @@ class HTML_ExpressTemplate
     // {{{ getFileName()
 
     /**
-     * Returns the filename of the template file
+     * Returns the filename of the template file to be rendered
      *
-     * @return mixed   The filename of the template file or null if the filename
-     *                 is not set
+     * @return mixed   The filename of the template file to be rendered or null if
+     *                 the filename is not set
      * @since  1.0
      */
     public function getFileName()
@@ -163,9 +163,9 @@ class HTML_ExpressTemplate
     // {{{ setFileName()
 
     /**
-     * Sets the filename of the template file
+     * Sets the template file to be rendered
      *
-     * @param  string  $filename The template file to be rendered
+     * @param  string  $filename The filename of the template file
      * @return void
      * @throws HTML_ExpressTemplate_InvalidPathException
      * @since  1.0
