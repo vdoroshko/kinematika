@@ -185,7 +185,7 @@ class HTML_ExpressTemplate
     /**
      * Returns the value of a template variable
      *
-     * @param  string  $name The variable name
+     * @param  string  $name The name of the variable
      * @return mixed   The value of the variable
      * @throws HTML_ExpressTemplate_UndefinedVariableException
      * @since  1.0
@@ -212,7 +212,7 @@ class HTML_ExpressTemplate
     /**
      * Sets the value of a template variable
      *
-     * @param  string  $name The variable name
+     * @param  string  $name The name of the variable
      * @param  mixed   $value The value of the variable
      * @return void
      * @since  1.0
