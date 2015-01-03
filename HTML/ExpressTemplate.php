@@ -66,12 +66,12 @@ class HTML_ExpressTemplate
     // {{{ protected class properties
 
     /**
-     * Path to a template file
+     * Filename of template file
      *
      * @var    string
      * @since  1.0
      */
-    protected $_filepath;
+    protected $_filename;
 
     /**
      * Associative array of template variables
@@ -87,12 +87,12 @@ class HTML_ExpressTemplate
     /**
      * Constructs a new HTML_ExpressTemplate object
      *
-     * @param  string  $filepath (optional) The path to the template file
+     * @param  string  $filename (optional) The template file to be rendered
      */
-    public function __construct($filepath = null)
+    public function __construct($filename = null)
     {
-        if ($filepath) {
-            $this->_filepath = (string)$filepath;
+        if ($filename) {
+            $this->_filename = (string)$filename;
         }
 
         $this->_vars = array();
@@ -113,16 +113,16 @@ class HTML_ExpressTemplate
      */
     public function render()
     {
-        if (empty($this->_filepath)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('template file path is not set');
+        if (empty($this->_filename)) {
+            throw new HTML_ExpressTemplate_InvalidPathException('template filename is not set');
         }
 
-        if (($script = @file_get_contents($this->_filepath)) === false) {
-            if (!@file_exists($this->_filepath)) {
-                throw new HTML_ExpressTemplate_FileNotFoundException(sprintf("template file '%s' not found", $this->_filepath));
+        if (($script = @file_get_contents($this->_filename)) === false) {
+            if (!@file_exists($this->_filename)) {
+                throw new HTML_ExpressTemplate_FileNotFoundException(sprintf("template file '%s' not found", $this->_filename));
             }
 
-            throw new HTML_ExpressTemplate_IOException(sprintf("could not read template file '%s'", $this->_filepath));
+            throw new HTML_ExpressTemplate_IOException(sprintf("could not read template file '%s'", $this->_filename));
         }
 
         ob_start();
@@ -130,12 +130,12 @@ class HTML_ExpressTemplate
         if (@eval('?>' . $script . '<?php ') === false) {
             if (function_exists('error_get_last')) {
                 if ($errorInfo = error_get_last()) {
-                    $message = sprintf("syntax error in template file '%s' on line %d", $this->_filepath, $errorInfo['line']);
-                    throw new HTML_ExpressTemplate_ParseException($message, $errorInfo['type'], $this->_filepath, $errorInfo['line']);
+                    $message = sprintf("syntax error in template file '%s' on line %d", $this->_filename, $errorInfo['line']);
+                    throw new HTML_ExpressTemplate_ParseException($message, $errorInfo['type'], $this->_filename, $errorInfo['line']);
                 }
             }
 
-            throw new HTML_ExpressTemplate_ParseException(sprintf("syntax error in template file '%s' on unknown line", $this->_filepath));
+            throw new HTML_ExpressTemplate_ParseException(sprintf("syntax error in template file '%s' on unknown line", $this->_filename));
         }
 
         $contents = ob_get_contents();
@@ -145,37 +145,38 @@ class HTML_ExpressTemplate
     }
 
     // }}}
-    // {{{ getFilePath()
+    // {{{ getFileName()
 
     /**
-     * Returns the path to the template file
+     * Returns the filename of the template file
      *
-     * @return mixed   The path to the template file or null if the path is not set
+     * @return mixed   The filename of the template file or null if the filename
+     *                 is not set
      * @since  1.0
      */
-    public function getFilePath()
+    public function getFileName()
     {
-        return $this->_filepath;
+        return $this->_filename;
     }
 
     // }}}
-    // {{{ setFilePath()
+    // {{{ setFileName()
 
     /**
-     * Sets the path to the template file
+     * Sets the filename of the template file
      *
-     * @param  string  $filepath The path to the template file
+     * @param  string  $filename The template file to be rendered
      * @return void
      * @throws HTML_ExpressTemplate_InvalidPathException
      * @since  1.0
      */
-    public function setFilePath($filepath)
+    public function setFileName($filename)
     {
-        if (empty($filepath)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('template file path cannot be empty');
+        if (empty($filename)) {
+            throw new HTML_ExpressTemplate_InvalidPathException('template filename cannot be empty');
         }
 
-        $this->_filepath = (string)$filepath;
+        $this->_filename = (string)$filename;
     }
 
     // }}}
@@ -194,7 +195,7 @@ class HTML_ExpressTemplate
         if (!array_key_exists($name, $this->_vars)) {
             $backtrace = debug_backtrace();
             if (strpos($backtrace[0]['file'], __FILE__) !== false) {
-                $message = sprintf("undefined template variable '%s' in template file '%s' on line %d", $name, $this->_filepath, $backtrace[0]['line']);
+                $message = sprintf("undefined template variable '%s' in template file '%s' on line %d", $name, $this->_filename, $backtrace[0]['line']);
             } else {
                 $message = sprintf("undefined template variable '%s' in file '%s' on line %d", $name, $backtrace[0]['file'], $backtrace[0]['line']);
             }
@@ -352,15 +353,15 @@ class HTML_ExpressTemplate_ParseException extends HTML_ExpressTemplate_Exception
      *
      * @param  string  $message The exception message
      * @param  integer $code (optional) The exception code
-     * @param  string  $filepath (optional) The file where the exception was thrown
+     * @param  string  $filename (optional) The file where the exception was thrown
      * @param  integer $line (optional) The line in the file where the exception was thrown
      */
-    public function __construct($message, $code = 0, $filepath = null, $line = null)
+    public function __construct($message, $code = 0, $filename = null, $line = null)
     {
         parent::__construct((string)$message, (integer)$code);
 
-        if ($filepath) {
-            $this->file = (string)$filepath;
+        if ($filename) {
+            $this->file = (string)$filename;
         }
 
         if ($line !== null) {
