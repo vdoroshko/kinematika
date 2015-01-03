@@ -66,7 +66,7 @@ class HTML_ExpressTemplate
     // {{{ protected class properties
 
     /**
-     * Filename of template file to be rendered
+     * Name of template file to be rendered
      *
      * @var    string
      * @since  1.0
@@ -114,7 +114,7 @@ class HTML_ExpressTemplate
     public function render()
     {
         if (empty($this->_filename)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('filename of template file is not set');
+            throw new HTML_ExpressTemplate_InvalidPathException('name of template file is not set');
         }
 
         if (($script = @file_get_contents($this->_filename)) === false) {
@@ -148,10 +148,10 @@ class HTML_ExpressTemplate
     // {{{ getFileName()
 
     /**
-     * Returns the filename of the template file to be rendered
+     * Returns the name of the template file to be rendered
      *
-     * @return mixed   The filename of the template file to be rendered or null if
-     *                 the filename is not set
+     * @return mixed   The name of the template file to be rendered or null if the
+     *                 name is not set
      * @since  1.0
      */
     public function getFileName()
@@ -173,7 +173,7 @@ class HTML_ExpressTemplate
     public function setFileName($filename)
     {
         if (empty($filename)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('filename of template file cannot be empty');
+            throw new HTML_ExpressTemplate_InvalidPathException('name of template file cannot be empty');
         }
 
         $this->_filename = (string)$filename;
