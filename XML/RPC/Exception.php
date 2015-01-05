@@ -67,8 +67,8 @@ class XML_RPC_Exception extends RuntimeException {}
 // {{{ class XML_RPC_BadMethodCallException
 
 /**
- * Exception class that is thrown when an attempt to invoke a method that does
- * not exist fails
+ * Exception class that is thrown when an attempt to invoke a method on a
+ * XML-RPC server that does not exist fails
  *
  * @category   Web Services
  * @package    XML_RPC_Exception
