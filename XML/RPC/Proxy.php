@@ -88,7 +88,7 @@ class XML_RPC_Proxy
     /**
      * Constructs a new XML_RPC_Proxy object
      *
-     * @param  string  $url The URL of the XML-RPC server to connect
+     * @param  string  $url The XML-RPC server to connect to
      * @param  array   $options (optional) The runtime configuration options
      * @throws DomainException
      * @throws InvalidArgumentException
@@ -109,6 +109,20 @@ class XML_RPC_Proxy
         $this->_registerOption('escaping', array('markup', 'non-ascii', 'non-print'));
 
         $this->setOptions($options);
+    }
+
+    // }}}
+    // {{{ getURL()
+
+    /**
+     * Returns the URL of the XML-RPC server
+     *
+     * @return string  The URL of the XML-RPC server
+     * @since  1.0
+     */
+    public function getURL()
+    {
+        return $this->_url;
     }
 
     // }}}
