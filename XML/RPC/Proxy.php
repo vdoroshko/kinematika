@@ -272,11 +272,11 @@ class XML_RPC_Proxy
         $request = xmlrpc_encode_request($method, $arguments, $options);
 
         $options = array(
-           'http' => array(
-               'method'  => 'POST',
-               'header'  => sprintf('Content-Type: text/xml; charset=%s', $this->_options['encoding']),
-               'content' => $request
-           )
+            'http' => array(
+                'method'  => 'POST',
+                'header'  => sprintf('Content-Type: text/xml; charset=%s', $this->_options['encoding']),
+                'content' => $request
+            )
         );
 
         $context = stream_context_create($options);
