@@ -314,7 +314,7 @@ class File implements IteratorAggregate
             $str = @fgets($this->_handle);
         }
 
-        if ($str === false) {
+        if (empty($str)) {
             if (feof($this->_handle)) {
                 return null;
             }
