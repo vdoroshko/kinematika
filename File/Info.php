@@ -240,7 +240,7 @@ class File_Info
             $this->_basename = $this->_filename;
         }
 
-        $pattern = '/\.([^\.' . preg_quote(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR). ']+)$/';
+        $pattern = '/\.([^\.' . preg_quote(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR) . ']+)$/';
         $matches = array();
         if (preg_match($pattern, $this->_filename, $matches)) {
             $this->_extension = $matches[1];
