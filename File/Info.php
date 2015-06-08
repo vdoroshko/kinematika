@@ -319,11 +319,7 @@ class File_Info
      */
     public function __isset($name)
     {
-        if (!array_key_exists('_' . $name, get_object_vars($this))) {
-            return false;
-        }
-
-        return $this->{'_' . $name} !== null;
+        return array_key_exists('_' . $name, get_object_vars($this));
     }
 
     // }}}
