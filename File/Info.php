@@ -212,17 +212,20 @@ class File_Info
     public function __construct($filename, $useIncludePath = false)
     {
         if (!@file_exists((string)$filename)) {
+            $fileNotFound = true;
+
             if ((boolean)$useIncludePath) {
-                $includePath = explode(PATH_SEPARATOR, get_include_path());
-                foreach ($includePath as $includePathItem) {
-                    $this->_filename = $includePathItem . DIRECTORY_SEPARATOR . (string)$filename;
+                $includePaths = explode(PATH_SEPARATOR, get_include_path());
+                foreach ($includePaths as $includePath) {
+                    $this->_filename = $includePath . DIRECTORY_SEPARATOR . (string)$filename;
                     if (@file_exists($this->_filename)) {
+                        $fileNotFound = false;
                         break;
                     }
                 }
             }
 
-            if (empty($this->_filename)) {
+            if ($fileNotFound) {
                 throw new File_NotFoundException(sprintf("file '%s' not found", $filename));
             }
         } else {
@@ -237,8 +240,10 @@ class File_Info
             $this->_basename = $this->_filename;
         }
 
-        if (($pos = strrpos($this->_filename, '.')) !== false) {
-            $this->_extension = substr($this->_filename, $pos + 1);
+        $pattern = '/\.([^\.' . preg_quote(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR). ']+)$/';
+        $matches = array();
+        if (preg_match($pattern, $this->_filename, $matches)) {
+            $this->_extension = $matches[1];
         } else {
             $this->_extension = '';
         }
