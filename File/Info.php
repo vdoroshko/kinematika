@@ -166,6 +166,14 @@ class File_Info
     protected $_type;
 
     /**
+     * Size of file
+     *
+     * @var    integer
+     * @since  1.0
+     */
+    protected $_size;
+
+    /**
      * Time when file was last accessed
      *
      * @var    integer
@@ -188,14 +196,6 @@ class File_Info
      * @since  1.0
      */
     protected $_lastChangedTime;
-
-    /**
-     * Size of file
-     *
-     * @var    integer
-     * @since  1.0
-     */
-    protected $_size;
 
     // }}}
     // {{{ constructor
@@ -247,6 +247,10 @@ class File_Info
             throw new File_IOException(sprintf("lstat failed for file '%s'", $filename));
         }
 
+        if (($this->_size = @filesize($this->_filename)) === false) {
+            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
+        }
+
         if (($this->_lastAccessedTime = @fileatime($this->_filename)) === false) {
             throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
         }
@@ -256,10 +260,6 @@ class File_Info
         }
 
         if (($this->_lastChangedTime = @filectime($this->_filename)) === false) {
-            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
-        }
-
-        if (($this->_size = @filesize($this->_filename)) === false) {
             throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
         }
     }
