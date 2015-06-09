@@ -66,7 +66,7 @@ class HTML_ExpressTemplate
     // {{{ protected class properties
 
     /**
-     * Name of template file to be rendered
+     * Template filename
      *
      * @var    string
      * @since  1.0
@@ -102,19 +102,19 @@ class HTML_ExpressTemplate
     // {{{ render()
 
     /**
-     * Parses the template file and returns the parsed content
+     * Parses the template file and returns the parsed contents
      *
      * @return string  The parsed content
      * @throws HTML_ExpressTemplate_FileNotFoundException
-     * @throws HTML_ExpressTemplate_IOException
      * @throws HTML_ExpressTemplate_InvalidPathException
+     * @throws HTML_ExpressTemplate_IOException
      * @throws HTML_ExpressTemplate_ParseException
      * @since  1.0
      */
     public function render()
     {
         if (empty($this->_filename)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('name of template file is not set');
+            throw new HTML_ExpressTemplate_InvalidPathException('template filename is not set');
         }
 
         if (($script = @file_get_contents($this->_filename)) === false) {
@@ -145,22 +145,21 @@ class HTML_ExpressTemplate
     }
 
     // }}}
-    // {{{ getFileName()
+    // {{{ getFilename()
 
     /**
-     * Returns the name of the template file to be rendered
+     * Returns the template filename
      *
-     * @return mixed   The name of the template file to be rendered or null if the
-     *                 name is not set
+     * @return mixed   The template filename or null if the filename is not set
      * @since  1.0
      */
-    public function getFileName()
+    public function getFilename()
     {
         return $this->_filename;
     }
 
     // }}}
-    // {{{ setFileName()
+    // {{{ setFilename()
 
     /**
      * Sets the template file to be rendered
@@ -170,10 +169,10 @@ class HTML_ExpressTemplate
      * @throws HTML_ExpressTemplate_InvalidPathException
      * @since  1.0
      */
-    public function setFileName($filename)
+    public function setFilename($filename)
     {
         if (empty($filename)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('name of template file cannot be empty');
+            throw new HTML_ExpressTemplate_InvalidPathException('template filename cannot be empty');
         }
 
         $this->_filename = (string)$filename;
@@ -294,6 +293,23 @@ class HTML_ExpressTemplate_Exception extends RuntimeException {}
 class HTML_ExpressTemplate_IOException extends HTML_ExpressTemplate_Exception {}
 
 // }}}
+// {{{ class HTML_ExpressTemplate_InvalidPathException
+
+/**
+ * Exception class that is thrown when path to a template file is invalid
+ *
+ * @category   HTML
+ * @package    HTML_ExpressTemplate
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2013-2015 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class HTML_ExpressTemplate_InvalidPathException extends HTML_ExpressTemplate_IOException {}
+
+// }}}
 // {{{ class HTML_ExpressTemplate_FileNotFoundException
 
 /**
@@ -310,23 +326,6 @@ class HTML_ExpressTemplate_IOException extends HTML_ExpressTemplate_Exception {}
  * @since      1.0
  */
 class HTML_ExpressTemplate_FileNotFoundException extends HTML_ExpressTemplate_IOException {}
-
-// }}}
-// {{{ class HTML_ExpressTemplate_InvalidPathException
-
-/**
- * Exception class that is thrown when path to a template file is invalid
- *
- * @category   HTML
- * @package    HTML_ExpressTemplate
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2013-2015 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class HTML_ExpressTemplate_InvalidPathException extends HTML_ExpressTemplate_Exception {}
 
 // }}}
 // {{{ class HTML_ExpressTemplate_ParseException
