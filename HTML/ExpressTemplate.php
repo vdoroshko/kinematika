@@ -102,9 +102,9 @@ class HTML_ExpressTemplate
     // {{{ render()
 
     /**
-     * Parses the template file and returns the parsed contents
+     * Renders the template file and returns the rendered contents
      *
-     * @return string  The parsed content
+     * @return string  The rendered contents
      * @throws HTML_ExpressTemplate_FileNotFoundException
      * @throws HTML_ExpressTemplate_InvalidPathException
      * @throws HTML_ExpressTemplate_IOException
