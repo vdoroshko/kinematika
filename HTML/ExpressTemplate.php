@@ -296,7 +296,7 @@ class HTML_ExpressTemplate_IOException extends HTML_ExpressTemplate_Exception {}
 // {{{ class HTML_ExpressTemplate_InvalidPathException
 
 /**
- * Exception class that is thrown when path to a template file is invalid
+ * Exception class that is thrown when template filename is invalid
  *
  * @category   HTML
  * @package    HTML_ExpressTemplate
