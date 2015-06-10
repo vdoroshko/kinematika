@@ -98,7 +98,9 @@ class XML_RPC_Proxy
     {
         if (empty($url)) {
             throw new XML_RPC_InvalidURLException('URL cannot be empty');
-        } elseif (!filter_var((string)$url, FILTER_VALIDATE_URL)) {
+        }
+
+        if (!filter_var((string)$url, FILTER_VALIDATE_URL)) {
             throw new XML_RPC_InvalidURLException(sprintf("'%s' is not a valid URL", $url));
         }
 
