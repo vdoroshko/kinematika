@@ -574,7 +574,7 @@ class File implements IteratorAggregate
     // {{{ getOption()
 
     /**
-     * Returns the value of the specified runtime configuration option
+     * Returns the value of a runtime configuration option
      *
      * @param  string  $name The option name
      * @return mixed   The option value
@@ -620,7 +620,7 @@ class File implements IteratorAggregate
     // {{{ setOption()
 
     /**
-     * Sets the value of the specified runtime configuration option
+     * Sets the value of a runtime configuration option
      *
      * @param  string  $name The option name
      * @param  mixed   $value The option value
