@@ -206,11 +206,16 @@ class File_Info
      *
      * @param  string  $filename The file to obtain information about
      * @param  boolean $useIncludePath (optional) Whether to search for the file in the include path too
+     * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      */
     public function __construct($filename, $useIncludePath = false)
     {
+        if (empty($filename)) {
+            throw new File_InvalidPathException('filename cannot be empty');
+        }
+
         if (!@file_exists((string)$filename)) {
             $fileNotFound = true;
 
