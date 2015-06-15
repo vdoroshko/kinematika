@@ -292,8 +292,8 @@ class File_Info
     /**
      * Returns the value of an object property
      *
-     * @param  string  $name The property name
-     * @return mixed   The property value
+     * @param  string  $name The name of the property
+     * @return mixed   The value of the property
      * @throws File_Info_BadPropertyException
      * @since  1.0
      */
@@ -312,8 +312,8 @@ class File_Info
     /**
      * Prevents object properties from being modified
      *
-     * @param  string  $name The property name
-     * @param  mixed   $value The property value
+     * @param  string  $name The name of the property
+     * @param  mixed   $value The value of the property
      * @return void
      * @throws File_Info_BadPropertyException
      * @throws File_Info_ReadOnlyPropertyException
@@ -334,7 +334,7 @@ class File_Info
     /**
      * Determines if an object property is set and is not null
      *
-     * @param  string  $name The property name to check
+     * @param  string  $name The name of the property to check
      * @return boolean true if the property exists and has value other than null
      *                 or false otherwise
      * @since  1.0
@@ -354,7 +354,7 @@ class File_Info
     /**
      * Prevents object properties from being unset
      *
-     * @param  string  $name The property name to unset
+     * @param  string  $name The name of the property to unset
      * @return void
      * @throws File_Info_BadPropertyException
      * @throws File_Info_ReadOnlyPropertyException
