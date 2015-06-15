@@ -115,31 +115,24 @@ class File_Info
      */
     const TYPE_BLOCK = 'block';
 
-    /**
-     * Unknown file type
-     *
-     * @since  1.0
-     */
-    const TYPE_UNKNOWN = 'unknown';
-
     // }}}
     // {{{ protected class properties
 
     /**
-     * Name of file
-     *
-     * @var    string
-     * @since  1.0
-     */
-    protected $_filename;
-
-    /**
-     * Path to file without name
+     * Path to file
      *
      * @var    string
      * @since  1.0
      */
     protected $_path;
+
+    /**
+     * Path of parent directory
+     *
+     * @var    string
+     * @since  1.0
+     */
+    protected $_dirname;
 
     /**
      * Name of file without path
@@ -160,7 +153,7 @@ class File_Info
     /**
      * Type of file
      *
-     * @var    string
+     * @var    mixed
      * @since  1.0
      */
     protected $_type;
@@ -168,7 +161,7 @@ class File_Info
     /**
      * Size of file
      *
-     * @var    integer
+     * @var    mixed
      * @since  1.0
      */
     protected $_size;
@@ -201,29 +194,29 @@ class File_Info
     // {{{ constructor
 
     /**
-     * Constructs a new File_Info object and obtains information about the
-     * specified file
+     * Constructs a new File_Info object and obtains information about a file
+     * on the specified path
      *
-     * @param  string  $filename The file to obtain information about
+     * @param  string  $path The file to obtain information about
      * @param  boolean $useIncludePath (optional) Whether to search for the file in the include path too
      * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      */
-    public function __construct($filename, $useIncludePath = false)
+    public function __construct($path, $useIncludePath = false)
     {
-        if (empty($filename)) {
-            throw new File_InvalidPathException('filename cannot be empty');
+        if (empty($path)) {
+            throw new File_InvalidPathException('file path cannot be empty');
         }
 
-        if (!@file_exists((string)$filename)) {
+        if (!@file_exists((string)$path)) {
             $fileNotFound = true;
 
             if ((boolean)$useIncludePath) {
                 $includePaths = explode(PATH_SEPARATOR, get_include_path());
                 foreach ($includePaths as $includePath) {
-                    $this->_filename = $includePath . DIRECTORY_SEPARATOR . (string)$filename;
-                    if (@file_exists($this->_filename)) {
+                    $this->_path = $includePath . DIRECTORY_SEPARATOR . (string)$path;
+                    if (@file_exists($this->_path)) {
                         $fileNotFound = false;
                         break;
                     }
@@ -231,47 +224,65 @@ class File_Info
             }
 
             if ($fileNotFound) {
-                throw new File_NotFoundException(sprintf("file '%s' not found", $filename));
+                throw new File_NotFoundException(sprintf("file '%s' not found", $path));
             }
         } else {
-            $this->_filename = (string)$filename;
+            $this->_path = (string)$path;
         }
 
-        if (($pos = strrpos($this->_filename, DIRECTORY_SEPARATOR)) !== false) {
-            $this->_path = substr($this->_filename, 0, $pos);
-            $this->_basename = substr($this->_filename, $pos + 1);
+        if (($lastDirectorySeparatorPos = strrpos($this->_path, DIRECTORY_SEPARATOR)) !== false) {
+            $this->_dirname = substr($this->_path, 0, $lastDirectorySeparatorPos);
+            $this->_basename = substr($this->_path, $lastDirectorySeparatorPos + 1);
         } else {
-            $this->_path = '';
-            $this->_basename = $this->_filename;
+            $this->_dirname = '';
+            $this->_basename = $this->_path;
         }
 
-        $pattern = '/\.([^\.' . preg_quote(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR) . ']+)$/';
+        $extensionPattern = '/\.([^\.' . preg_quote(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR) . ']+)$/';
         $matches = array();
 
-        if (preg_match($pattern, $this->_filename, $matches)) {
+        if (preg_match($extensionPattern, $this->_path, $matches)) {
             $this->_extension = $matches[1];
         } else {
             $this->_extension = '';
         }
 
-        if (($this->_type = @filetype($this->_filename)) === false) {
-            throw new File_IOException(sprintf("lstat failed for file '%s'", $filename));
+        if (($this->_type = @filetype($this->_path)) === false) {
+            throw new File_IOException(sprintf("lstat failed for file '%s'", $path));
         }
 
-        if (($this->_size = @filesize($this->_filename)) === false) {
-            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
+        if ($this->_type == self::TYPE_FILE) {
+            if (($this->_size = @filesize($this->_path)) === false) {
+                throw new File_IOException(sprintf("stat failed for file '%s'", $path));
+            }
+        } elseif ($this->_type == self::TYPE_LINK) {
+            if (($targetPath = @readlink($this->_path)) === false) {
+                throw new File_IOException(sprintf("readlink failed for file '%s'", $path));
+            }
+
+            if (($targetType = @filetype($targetPath)) === false) {
+                throw new File_IOException(sprintf("lstat failed for file '%s'", $targetPath));
+            }
+
+            if ($targetType == self::TYPE_FILE) {
+                if (($this->_size = @filesize($targetPath)) === false) {
+                    throw new File_IOException(sprintf("stat failed for file '%s'", $targetPath));
+                }
+            }
+        } elseif ($this->_type == 'unknown') {
+            $this->_type = null;
         }
 
-        if (($this->_lastAccessedTime = @fileatime($this->_filename)) === false) {
-            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
+        if (($this->_lastAccessedTime = @fileatime($this->_path)) === false) {
+            throw new File_IOException(sprintf("stat failed for file '%s'", $path));
         }
 
-        if (($this->_lastModifiedTime = @filemtime($this->_filename)) === false) {
-            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
+        if (($this->_lastModifiedTime = @filemtime($this->_path)) === false) {
+            throw new File_IOException(sprintf("stat failed for file '%s'", $path));
         }
 
-        if (($this->_lastChangedTime = @filectime($this->_filename)) === false) {
-            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
+        if (($this->_lastChangedTime = @filectime($this->_path)) === false) {
+            throw new File_IOException(sprintf("stat failed for file '%s'", $path));
         }
     }
 
@@ -279,7 +290,7 @@ class File_Info
     // {{{ __get()
 
     /**
-     * Returns the value of the object property
+     * Returns the value of an object property
      *
      * @param  string  $name The property name
      * @return mixed   The property value
@@ -299,7 +310,7 @@ class File_Info
     // {{{ __set()
 
     /**
-     * Prevents the object properties from being modified
+     * Prevents an object properties from being modified
      *
      * @param  string  $name The property name
      * @param  mixed   $value The property value
@@ -321,23 +332,27 @@ class File_Info
     // {{{ __isset()
 
     /**
-     * Determines if the object property is set and is not null
+     * Determines if an object property is set and is not null
      *
      * @param  string  $name The property name to check
-     * @return boolean true if the object property exists and has value other
-     *                 than null or false otherwise
+     * @return boolean true if the property exists and has value other than null
+     *                 or false otherwise
      * @since  1.0
      */
     public function __isset($name)
     {
-        return array_key_exists('_' . $name, get_object_vars($this));
+        if (!array_key_exists('_' . $name, get_object_vars($this))) {
+            return false;
+        }
+
+        return $this->{'_' . $name} !== null;
     }
 
     // }}}
     // {{{ __unset()
 
     /**
-     * Prevents the object properties from being unset
+     * Prevents an object properties from being unset
      *
      * @param  string  $name The property name to unset
      * @return void
@@ -379,7 +394,7 @@ class File_Info_Exception extends LogicException {}
 
 /**
  * Exception class that is thrown when there is an attempt to access a
- * property of File_Info object that does not exist
+ * file information property that does not exist
  *
  * @category   File System
  * @package    File_Info
@@ -397,7 +412,7 @@ class File_Info_BadPropertyException extends File_Info_Exception {}
 
 /**
  * Exception class that is thrown when there is an attempt to modify or unset
- * a property of File_Info object
+ * a file information property
  *
  * @category   File System
  * @package    File_Info
