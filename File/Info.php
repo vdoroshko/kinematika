@@ -310,7 +310,7 @@ class File_Info
     // {{{ __set()
 
     /**
-     * Prevents an object properties from being modified
+     * Prevents object properties from being modified
      *
      * @param  string  $name The property name
      * @param  mixed   $value The property value
@@ -352,7 +352,7 @@ class File_Info
     // {{{ __unset()
 
     /**
-     * Prevents an object properties from being unset
+     * Prevents object properties from being unset
      *
      * @param  string  $name The property name to unset
      * @return void
