@@ -256,13 +256,18 @@ class File_Info
                 throw new File_IOException(sprintf("stat failed for file '%s'", $path));
             }
         } elseif ($this->_type == self::TYPE_LINK) {
-            if (($targetPath = @readlink($this->_path)) === false) {
-                throw new File_IOException(sprintf("readlink failed for file '%s'", $path));
-            }
+            $symlinkPath = $this->_path;
+            do {
+                if (($targetPath = @readlink($symlinkPath)) === false) {
+                    throw new File_IOException(sprintf("readlink failed for file '%s'", $symlinkPath));
+                }
 
-            if (($targetType = @filetype($targetPath)) === false) {
-                throw new File_IOException(sprintf("lstat failed for file '%s'", $targetPath));
-            }
+                if (($targetType = @filetype($targetPath)) === false) {
+                    throw new File_IOException(sprintf("lstat failed for file '%s'", $targetPath));
+                }
+
+                $symlinkPath = $targetPath;
+            } while ($targetType == self::TYPE_LINK);
 
             if ($targetType == self::TYPE_FILE) {
                 if (($this->_size = @filesize($targetPath)) === false) {
