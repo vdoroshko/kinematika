@@ -212,7 +212,7 @@ class File_Info
         if (!@file_exists((string)$path)) {
             $fileNotFound = true;
 
-            if ((boolean)$useIncludePath) {
+            if ($useIncludePath) {
                 $includePaths = explode(PATH_SEPARATOR, get_include_path());
                 foreach ($includePaths as $includePath) {
                     $this->_path = $includePath . DIRECTORY_SEPARATOR . (string)$path;
