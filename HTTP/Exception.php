@@ -69,7 +69,7 @@ class HTTP_Exception extends RuntimeException
      * Constructs a new HTTP_Exception object
      *
      * @param  mixed   $message Either the HTTP status code or the exception message
-     * @param  integer $code (optional) The HTTP status code
+     * @param  mixed   $code (optional) The HTTP status code
      * @throws OutOfRangeException
      */
     public function __construct($message, $code = null)
