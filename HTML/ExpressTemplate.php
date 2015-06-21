@@ -294,23 +294,6 @@ class HTML_ExpressTemplate_Exception extends RuntimeException {}
 class HTML_ExpressTemplate_IOException extends HTML_ExpressTemplate_Exception {}
 
 // }}}
-// {{{ class HTML_ExpressTemplate_InvalidFilenameException
-
-/**
- * Exception class that is thrown when template filename is invalid
- *
- * @category   HTML
- * @package    HTML_ExpressTemplate
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2013-2015 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class HTML_ExpressTemplate_InvalidFilenameException extends HTML_ExpressTemplate_IOException {}
-
-// }}}
 // {{{ class HTML_ExpressTemplate_FileNotFoundException
 
 /**
@@ -327,6 +310,23 @@ class HTML_ExpressTemplate_InvalidFilenameException extends HTML_ExpressTemplate
  * @since      1.0
  */
 class HTML_ExpressTemplate_FileNotFoundException extends HTML_ExpressTemplate_IOException {}
+
+// }}}
+// {{{ class HTML_ExpressTemplate_InvalidFilenameException
+
+/**
+ * Exception class that is thrown when template filename is invalid
+ *
+ * @category   HTML
+ * @package    HTML_ExpressTemplate
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2013-2015 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class HTML_ExpressTemplate_InvalidFilenameException extends HTML_ExpressTemplate_IOException {}
 
 // }}}
 // {{{ class HTML_ExpressTemplate_ParseException
