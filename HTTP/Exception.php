@@ -6,7 +6,7 @@
  *
  * PHP version 5
  *
- * Copyright (c) 2009-2014, Vitaly Doroshko
+ * Copyright (c) 2009-2015, Vitaly Doroshko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
  * @category   HTTP
  * @package    HTTP_Exception
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2009-2014 Vitaly Doroshko
+ * @copyright  2009-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @version    1.0
@@ -55,7 +55,7 @@
  * @category   HTTP
  * @package    HTTP_Exception
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2009-2014 Vitaly Doroshko
+ * @copyright  2009-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
@@ -92,7 +92,7 @@ class HTTP_Exception extends RuntimeException
  * @category   HTTP
  * @package    HTTP_Exception
  * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2009-2014 Vitaly Doroshko
+ * @copyright  2009-2015 Vitaly Doroshko
  * @license    http://opensource.org/licenses/BSD-3-Clause
  *             BSD 3-Clause License
  * @link       https://github.com/vdoroshko/kinematika
