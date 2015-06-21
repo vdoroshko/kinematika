@@ -85,7 +85,8 @@ class XML_RPC_BadMethodCallException extends XML_RPC_Exception {}
 // {{{ class XML_RPC_FaultException
 
 /**
- * Exception class that is thrown when XML-RPC server returns a fault response
+ * Exception class that is thrown when a XML-RPC server returns a fault
+ * response
  *
  * @category   Web Services
  * @package    XML_RPC_Exception
