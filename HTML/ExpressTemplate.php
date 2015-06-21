@@ -114,7 +114,7 @@ class HTML_ExpressTemplate
     public function render()
     {
         if (empty($this->_filename)) {
-            throw new HTML_ExpressTemplate_InvalidFilenameException('template filename is not set');
+            throw new HTML_ExpressTemplate_InvalidFilenameException('filename of template file is not set');
         }
 
         if (($script = @file_get_contents($this->_filename)) === false) {
@@ -173,7 +173,7 @@ class HTML_ExpressTemplate
     public function setFilename($filename)
     {
         if (empty($filename)) {
-            throw new HTML_ExpressTemplate_InvalidFilenameException('template filename cannot be empty');
+            throw new HTML_ExpressTemplate_InvalidFilenameException('filename of template file cannot be empty');
         }
 
         $this->_filename = (string)$filename;

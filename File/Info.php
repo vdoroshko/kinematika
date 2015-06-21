@@ -206,7 +206,7 @@ class File_Info
     public function __construct($path, $useIncludePath = false)
     {
         if (empty($path)) {
-            throw new File_InvalidPathException('file path cannot be empty');
+            throw new File_InvalidPathException('path to file cannot be empty');
         }
 
         if (!@file_exists((string)$path)) {
