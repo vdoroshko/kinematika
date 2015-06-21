@@ -197,7 +197,7 @@ class File_Info
      * Constructs a new File_Info object and obtains information about a file
      * on the specified path
      *
-     * @param  string  $path The file to obtain information about
+     * @param  string  $path The path to the file to obtain information about
      * @param  boolean $useIncludePath (optional) Whether to search for the file in the include path too
      * @throws File_InvalidPathException
      * @throws File_NotFoundException
