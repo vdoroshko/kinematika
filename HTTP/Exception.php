@@ -70,12 +70,21 @@ class HTTP_Exception extends RuntimeException
      *
      * @param  mixed   $message Either the HTTP status code or the exception message
      * @param  integer $code (optional) The HTTP status code
+     * @throws OutOfRangeException
      */
-    public function __construct($message, $code = 0)
+    public function __construct($message, $code = null)
     {
         if (is_numeric((string)$message)) {
+            if ((integer)$message < 100 || (integer)$message > 599) {
+                throw new OutOfRangeException('HTTP status code should be between 100-599');
+            }
+
             parent::__construct('', (integer)$message);
         } else {
+            if ((integer)$code < 100 || (integer)$code > 599) {
+                throw new OutOfRangeException('HTTP status code should be between 100-599');
+            }
+
             parent::__construct((string)$message, (integer)$code);
         }
     }
@@ -107,9 +116,19 @@ class HTTP_Redirect extends HTTP_Exception
      *
      * @param  string  $url The URL to redirect to
      * @param  integer $code (optional) The HTTP status code to use when redirecting
+     * @throws InvalidArgumentException
+     * @throws OutOfRangeException
      */
     public function __construct($url, $code = 302)
     {
+        if (empty($url)) {
+            throw new InvalidArgumentException('URL cannot be empty');
+        }
+
+        if ((integer)$code < 300 || (integer)$code > 399) {
+            throw new OutOfRangeException('HTTP status code should be between 300-399');
+        }
+
         parent::__construct($url, $code);
     }
 
