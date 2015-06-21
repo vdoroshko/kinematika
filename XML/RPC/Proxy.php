@@ -92,16 +92,15 @@ class XML_RPC_Proxy
      * @param  array   $options (optional) The runtime configuration options
      * @throws DomainException
      * @throws InvalidArgumentException
-     * @throws XML_RPC_InvalidURLException
      */
     public function __construct($url, $options = array())
     {
         if (empty($url)) {
-            throw new XML_RPC_InvalidURLException('URL cannot be empty');
+            throw new InvalidArgumentException('URL cannot be empty');
         }
 
         if (!filter_var((string)$url, FILTER_VALIDATE_URL)) {
-            throw new XML_RPC_InvalidURLException(sprintf("'%s' is not a valid URL", $url));
+            throw new InvalidArgumentException(sprintf("'%s' is not a valid URL", $url));
         }
 
         $this->_url = (string)$url;

@@ -133,23 +133,6 @@ class XML_RPC_FaultException extends XML_RPC_Exception
 class XML_RPC_IOException extends XML_RPC_Exception {}
 
 // }}}
-// {{{ class XML_RPC_InvalidURLException
-
-/**
- * Exception class that is thrown when URL of a XML-RPC server is invalid
- *
- * @category   Web Services
- * @package    XML_RPC_Exception
- * @author     Vitaly Doroshko <vdoroshko@mail.ru>
- * @copyright  2014, 2015 Vitaly Doroshko
- * @license    http://opensource.org/licenses/BSD-3-Clause
- *             BSD 3-Clause License
- * @link       https://github.com/vdoroshko/kinematika
- * @since      1.0
- */
-class XML_RPC_InvalidURLException extends XML_RPC_Exception {}
-
-// }}}
 // {{{ class XML_RPC_NotAllowedException
 
 /**
