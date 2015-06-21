@@ -66,7 +66,7 @@ class HTML_ExpressTemplate
     // {{{ protected class properties
 
     /**
-     * Template filename
+     * Filename of template file
      *
      * @var    string
      * @since  1.0
@@ -87,7 +87,7 @@ class HTML_ExpressTemplate
     /**
      * Constructs a new HTML_ExpressTemplate object
      *
-     * @param  string  $filename (optional) The template file to be rendered
+     * @param  string  $filename (optional) The filename of the template file to be rendered
      */
     public function __construct($filename = null)
     {
@@ -106,7 +106,7 @@ class HTML_ExpressTemplate
      *
      * @return string  The rendered contents
      * @throws HTML_ExpressTemplate_FileNotFoundException
-     * @throws HTML_ExpressTemplate_InvalidPathException
+     * @throws HTML_ExpressTemplate_InvalidFilenameException
      * @throws HTML_ExpressTemplate_IOException
      * @throws HTML_ExpressTemplate_ParseException
      * @since  1.0
@@ -114,7 +114,7 @@ class HTML_ExpressTemplate
     public function render()
     {
         if (empty($this->_filename)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('template filename is not set');
+            throw new HTML_ExpressTemplate_InvalidFilenameException('template filename is not set');
         }
 
         if (($script = @file_get_contents($this->_filename)) === false) {
@@ -148,9 +148,10 @@ class HTML_ExpressTemplate
     // {{{ getFilename()
 
     /**
-     * Returns the template filename
+     * Returns the filename of the template file
      *
-     * @return mixed   The template filename or null if the filename is not set
+     * @return mixed   The filename of the template file or null if the filename
+     *                 is not set
      * @since  1.0
      */
     public function getFilename()
@@ -162,17 +163,17 @@ class HTML_ExpressTemplate
     // {{{ setFilename()
 
     /**
-     * Sets the template file to be rendered
+     * Sets the filename of the template file to be rendered
      *
-     * @param  string  $filename The template file to be rendered
+     * @param  string  $filename The filename of the template file to be rendered
      * @return void
-     * @throws HTML_ExpressTemplate_InvalidPathException
+     * @throws HTML_ExpressTemplate_InvalidFilenameException
      * @since  1.0
      */
     public function setFilename($filename)
     {
         if (empty($filename)) {
-            throw new HTML_ExpressTemplate_InvalidPathException('template filename cannot be empty');
+            throw new HTML_ExpressTemplate_InvalidFilenameException('template filename cannot be empty');
         }
 
         $this->_filename = (string)$filename;
@@ -261,7 +262,7 @@ class HTML_ExpressTemplate
 // {{{ class HTML_ExpressTemplate_Exception
 
 /**
- * Base class for all templating exceptions
+ * Base class for all template exceptions
  *
  * @category   HTML
  * @package    HTML_ExpressTemplate
@@ -293,7 +294,7 @@ class HTML_ExpressTemplate_Exception extends RuntimeException {}
 class HTML_ExpressTemplate_IOException extends HTML_ExpressTemplate_Exception {}
 
 // }}}
-// {{{ class HTML_ExpressTemplate_InvalidPathException
+// {{{ class HTML_ExpressTemplate_InvalidFilenameException
 
 /**
  * Exception class that is thrown when template filename is invalid
@@ -307,7 +308,7 @@ class HTML_ExpressTemplate_IOException extends HTML_ExpressTemplate_Exception {}
  * @link       https://github.com/vdoroshko/kinematika
  * @since      1.0
  */
-class HTML_ExpressTemplate_InvalidPathException extends HTML_ExpressTemplate_IOException {}
+class HTML_ExpressTemplate_InvalidFilenameException extends HTML_ExpressTemplate_IOException {}
 
 // }}}
 // {{{ class HTML_ExpressTemplate_FileNotFoundException
