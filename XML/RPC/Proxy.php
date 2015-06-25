@@ -132,8 +132,8 @@ class XML_RPC_Proxy
     /**
      * Returns the value of a runtime configuration option
      *
-     * @param  string  $name The option name
-     * @return mixed   The option value
+     * @param  string  $name The name of the option
+     * @return mixed   The value of the option
      * @throws DomainException
      * @since  1.0
      */
@@ -153,7 +153,7 @@ class XML_RPC_Proxy
      * Returns either the values of all the runtime configuration options or the
      * values of the specified runtime configuration options only
      *
-     * @param  array   $names (optional) An array containing the names of the options
+     * @param  array   $names (optional) An array of names of the options
      * @return array   An associative array of the options
      * @throws DomainException
      * @since  1.0
@@ -178,8 +178,8 @@ class XML_RPC_Proxy
     /**
      * Sets the value of a runtime configuration option
      *
-     * @param  string  $name The option name
-     * @param  string  $value The option value
+     * @param  string  $name The name of the option
+     * @param  string  $value The value of the option
      * @return void
      * @throws DomainException
      * @throws InvalidArgumentException
@@ -248,16 +248,16 @@ class XML_RPC_Proxy
     /**
      * Invokes a method on the XML-RPC server
      *
-     * @param  string  $name The method to call
-     * @param  array   $arguments An array of arguments to pass to the method
-     * @return mixed   The method result decoded into native PHP types
+     * @param  string  $name The name of the method to invoke
+     * @param  array   $args An array of arguments to pass to the method
+     * @return mixed   The method invocation result decoded into native PHP types
      * @throws XML_RPC_BadMethodCallException
      * @throws XML_RPC_FaultException
      * @throws XML_RPC_IOException
      * @throws XML_RPC_NotAllowedException
      * @since  1.0
      */
-    public function __call($name, $arguments)
+    public function __call($name, $args)
     {
         if (!ini_get('allow_url_fopen')) {
             throw new XML_RPC_NotAllowedException('remote access is disabled in the local server configuration');
@@ -270,7 +270,7 @@ class XML_RPC_Proxy
             'escaping' => $this->_options['escaping']
         );
 
-        $request = xmlrpc_encode_request($method, $arguments, $options);
+        $request = xmlrpc_encode_request($method, $args, $options);
 
         $options = array(
             'http' => array(
@@ -303,8 +303,8 @@ class XML_RPC_Proxy
     /**
      * Adds a new option into the runtime configuration option array
      *
-     * @param  string  $name The option name
-     * @param  mixed   $value (optional) The default option value
+     * @param  string  $name The name of the option
+     * @param  mixed   $value (optional) The default value of the option
      * @return void
      * @throws DomainException
      * @since  1.0
