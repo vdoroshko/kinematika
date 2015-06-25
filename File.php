@@ -576,8 +576,8 @@ class File implements IteratorAggregate
     /**
      * Returns the value of a runtime configuration option
      *
-     * @param  string  $name The option name
-     * @return mixed   The option value
+     * @param  string  $name The name of the option
+     * @return mixed   The value of the option
      * @throws DomainException
      * @since  1.0
      */
@@ -597,7 +597,7 @@ class File implements IteratorAggregate
      * Returns either the values of all the runtime configuration options or the
      * values of the specified runtime configuration options only
      *
-     * @param  array   $names (optional) An array containing the names of the options
+     * @param  array   $names (optional) An array of names of the options
      * @return array   An associative array of the options
      * @throws DomainException
      * @since  1.0
@@ -622,8 +622,8 @@ class File implements IteratorAggregate
     /**
      * Sets the value of a runtime configuration option
      *
-     * @param  string  $name The option name
-     * @param  mixed   $value The option value
+     * @param  string  $name The name of the option
+     * @param  string  $value The value of the option
      * @return void
      * @throws DomainException
      * @throws InvalidArgumentException
@@ -638,7 +638,7 @@ class File implements IteratorAggregate
         switch ((string)$name) {
             case 'encoding':
                 if ($value) {
-                    if (iconv('utf-8', (string)$value, 'encoding') === false) {
+                    if (iconv('iso-8859-1', (string)$value, 'encoding') === false) {
                         throw new DomainException(sprintf("'%s' is not valid encoding", $value));
                     }
 
@@ -671,7 +671,7 @@ class File implements IteratorAggregate
     // {{{ setOptions()
 
     /**
-     * Sets the values of specified runtime configuration options
+     * Sets the values of the specified runtime configuration options
      *
      * @param  array   $options An associative array of the options
      * @return void
@@ -690,10 +690,10 @@ class File implements IteratorAggregate
     // {{{ _registerOption()
 
     /**
-     * Adds a new option into the runtime configuration option array
+     * Adds a new option into the array of runtime configuration options
      *
-     * @param  string  $name The option name
-     * @param  mixed   $value (optional) The default option value
+     * @param  string  $name The name of the option to add
+     * @param  mixed   $value (optional) The default value of the option
      * @return void
      * @throws DomainException
      * @since  1.0
