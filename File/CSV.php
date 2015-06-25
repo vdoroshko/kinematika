@@ -261,6 +261,54 @@ class File_CSV extends File
     }
 
     // }}}
+    // {{{ setOption()
+
+    /**
+     * Sets the value of a runtime configuration option
+     *
+     * @param  string  $name The name of the option
+     * @param  string  $value The value of the option
+     * @return void
+     * @throws DomainException
+     * @throws InvalidArgumentException
+     * @throws LengthException
+     * @since  1.0
+     */
+    public function setOption($name, $value)
+    {
+        if (!array_key_exists((string)$name, $this->_options)) {
+            throw new DomainException(sprintf("unknown option '%s'", $name));
+        }
+
+        switch ((string)$name) {
+            case 'length':
+                if ($value) {
+                    if ((integer)$value < 0) {
+                        throw new LengthException('length cannot be negative');
+                    }
+
+                    $this->_options[(string)$name] = (integer)$value;
+                } else {
+                    $this->_options[(string)$name] = null;
+                }
+
+                break;
+
+            case 'delimiter':
+            case 'enclosure':
+                if (empty($value)) {
+                    throw new InvalidArgumentException(sprintf('%s cannot be empty', $name));
+                }
+
+                $this->_options[(string)$name] = substr((string)$value, 0, 1);
+                break;
+
+            default:
+                parent::setOption($name, $value);
+        }
+    }
+
+    // }}}
     // {{{ _getRow()
 
     /**
