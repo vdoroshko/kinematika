@@ -70,7 +70,7 @@ class File_CSV extends File
      * Constructs a new File_CSV object and opens a CSV file on the specified
      * path either for reading or for writing
      *
-     * @param  string  $path The file to open
+     * @param  string  $path The path to the file to open
      * @param  string  $mode The file access mode
      * @param  array   $options The runtime configuration options
      * @throws DomainException
@@ -82,7 +82,7 @@ class File_CSV extends File
     protected function __construct($path, $mode, $options)
     {
         if (empty($path)) {
-            throw new File_InvalidPathException('file path cannot be empty');
+            throw new File_InvalidPathException('path to file cannot be empty');
         }
 
         if (!preg_match('/^([r]|[waxc])[bt]?$/', (string)$mode)) {
