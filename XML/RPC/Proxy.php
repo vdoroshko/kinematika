@@ -303,7 +303,7 @@ class XML_RPC_Proxy
     /**
      * Adds a new option into the array of runtime configuration options
      *
-     * @param  string  $name The name of the option
+     * @param  string  $name The name of the option to add
      * @param  mixed   $value (optional) The default value of the option
      * @return void
      * @throws DomainException
