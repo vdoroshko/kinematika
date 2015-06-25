@@ -85,7 +85,7 @@ class File_CSV extends File
             throw new File_InvalidPathException('path to file cannot be empty');
         }
 
-        if (!preg_match('/^([r]|[waxc])[bt]?$/', (string)$mode)) {
+        if (!preg_match('/^(r|[waxc])[bt]?$/', (string)$mode)) {
             throw new DomainException('access mode can be either read or write');
         }
 
