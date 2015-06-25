@@ -88,7 +88,7 @@ class XML_RPC_Proxy
     /**
      * Constructs a new XML_RPC_Proxy object
      *
-     * @param  string  $url The XML-RPC server to be connected to
+     * @param  string  $url The URL of the XML-RPC server to be connected to
      * @param  array   $options (optional) The runtime configuration options
      * @throws DomainException
      * @throws InvalidArgumentException
@@ -227,7 +227,7 @@ class XML_RPC_Proxy
     // {{{ setOptions()
 
     /**
-     * Sets the values of specified runtime configuration options
+     * Sets the values of the specified runtime configuration options
      *
      * @param  array   $options An associative array of the options
      * @return void
