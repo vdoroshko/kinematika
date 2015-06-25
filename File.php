@@ -154,7 +154,7 @@ class File implements IteratorAggregate
         }
 
         if (($handle = @fopen((string)$path, (string)$mode, $useIncludePath)) === false) {
-            if (preg_match('/^[r][bt]?\+?$/', (string)$mode)) {
+            if (preg_match('/^r[bt]?\+?$/', (string)$mode)) {
                 if (!self::exists($path, $useIncludePath)) {
                     throw new File_NotFoundException(sprintf("file '%s' not found", $path));
                 }
