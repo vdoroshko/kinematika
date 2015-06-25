@@ -120,7 +120,7 @@ class XML_RPC_FaultException extends XML_RPC_Exception
 
 /**
  * Exception class that is thrown when a communications failure occurs during
- * a XML-RPC method call
+ * a XML-RPC method invocation
  *
  * @category   Web Services
  * @package    XML_RPC_Exception
