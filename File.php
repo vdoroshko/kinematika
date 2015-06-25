@@ -128,7 +128,7 @@ class File implements IteratorAggregate
      * Constructs a new File object and opens a file on the specified path for
      * reading and/or writing
      *
-     * @param  string  $path The file to open
+     * @param  string  $path The path to the file to open
      * @param  string  $mode The file access mode
      * @param  array   $options The runtime configuration options
      * @throws DomainException
@@ -140,7 +140,7 @@ class File implements IteratorAggregate
     protected function __construct($path, $mode, $options)
     {
         if (empty($path)) {
-            throw new File_InvalidPathException('file path cannot be empty');
+            throw new File_InvalidPathException('path to file cannot be empty');
         }
 
         if (!preg_match('/^[rwaxc][bt]?\+?$/', (string)$mode)) {
