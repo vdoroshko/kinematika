@@ -75,6 +75,7 @@ class File_CSV extends File
      * @param  array   $options The runtime configuration options
      * @throws DomainException
      * @throws InvalidArgumentException
+     * @throws LengthException
      * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
