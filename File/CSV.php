@@ -70,7 +70,7 @@ class File_CSV extends File
      * Constructs a new File_CSV object and opens a CSV file on the specified
      * path either for reading or for writing
      *
-     * @param  string  $path The path to the file to open
+     * @param  string  $filename The filename of the file to open
      * @param  string  $mode The file access mode
      * @param  array   $options The runtime configuration options
      * @throws DomainException
@@ -80,21 +80,25 @@ class File_CSV extends File
      * @throws File_NotFoundException
      * @throws File_IOException
      */
-    protected function __construct($path, $mode, $options)
+    protected function __construct($filename, $mode, $options)
     {
-        if (empty($path)) {
-            throw new File_InvalidPathException('path to file cannot be empty');
+        if (empty($filename)) {
+            throw new File_InvalidPathException('filename cannot be empty');
         }
 
-        if (!preg_match('/^(r|[waxc])[bt]?$/', (string)$mode)) {
+        if (!preg_match('/^(r|[waxc]).?$/', (string)$mode)) {
             throw new DomainException('access mode can be either read or write');
         }
 
-        $this->_registerOption('length', 2048);
+        if (!preg_match('/^.[bt]?$/', (string)$mode)) {
+            throw new DomainException('file can be opened either in text mode or in binary mode');
+        }
+
+        $this->_registerOption('length', null);
         $this->_registerOption('delimiter', ',');
         $this->_registerOption('enclosure', '"');
 
-        parent::__construct($path, $mode, $options);
+        parent::__construct($filename, $mode, $options);
     }
 
     // }}}
@@ -104,7 +108,7 @@ class File_CSV extends File
      * Creates a new File_CSV object and opens a CSV file on the specified path
      * either for reading or for writing
      *
-     * @param  string  $path The file to open
+     * @param  string  $filename The filename of the file to open
      * @param  string  $mode (optional) The file access mode
      * @param  array   $options (optional) The runtime configuration options
      * @return object  A new File_CSV object
@@ -115,17 +119,17 @@ class File_CSV extends File
      * @throws File_IOException
      * @since  1.0
      */
-    public static function open($path, $mode = 'r', $options = array())
+    public static function open($filename, $mode = 'r', $options = array())
     {
         static $instances;
 
-        if (empty($instances[(string)$path])) {
-            $instances[(string)$path] = new self($path, $mode, $options);
-        } elseif (empty($instances[(string)$path]->handle)) {
-            $instances[(string)$path] = new self($path, $mode, $options);
+        if (empty($instances[(string)$filename])) {
+            $instances[(string)$filename] = new self($filename, $mode, $options);
+        } elseif ($instances[(string)$filename]->getHandle() === null) {
+            $instances[(string)$filename] = new self($filename, $mode, $options);
         }
 
-        return $instances[(string)$path];
+        return $instances[(string)$filename];
     }
 
     // }}}
@@ -157,11 +161,11 @@ class File_CSV extends File
             throw new File_NotFoundException(sprintf("directory '%s' does not exist", $dir));
         }
 
-        if (($path = @tempnam((string)$dir, (string)$prefix)) === false) {
+        if (($filename = @tempnam((string)$dir, (string)$prefix)) === false) {
             throw new File_IOException(sprintf("could not create temporary file in directory '%s'", $dir));
         }
 
-        return self::open($path, $mode, $options);
+        return self::open($filename, $mode, $options);
     }
 
     // }}}
@@ -328,18 +332,18 @@ class File_CSV extends File
             throw new File_IOException(sprintf("attempt to read from closed file '%s'", $this->_path));
         }
 
-        if (preg_match('/^[waxc][bt]?$/', $this->_mode)) {
+        if (!preg_match('/^r.?$/', $this->_mode)) {
             throw new File_IOException(sprintf("file '%s' is not open for reading", $this->_path));
         }
 
         $row = @fgetcsv(
             $this->_handle,
-            $this->_options['length'],
+            (integer)$this->_options['length'],
             $this->_options['delimiter'],
             $this->_options['enclosure']
         );
 
-        if ($row === false) {
+        if (empty($row)) {
             if (feof($this->_handle)) {
                 return null;
             }
@@ -377,12 +381,12 @@ class File_CSV extends File
             throw new File_IOException(sprintf("attempt to write to closed file '%s'", $this->_path));
         }
 
-        if (preg_match('/^[r][bt]?$/', $this->_mode)) {
+        if (!preg_match('/^[waxc].?$/', $this->_mode)) {
             throw new File_IOException(sprintf("file '%s' is not open for writing", $this->_path));
         }
 
         if ($this->_options['filter']) {
-            $row = $this->_applyFilter($row);
+            $row = $this->_applyFilter((array)$row);
         }
 
         if ($this->_options['encoding']) {
@@ -500,7 +504,7 @@ class File_CSV_Iterator implements Iterator
      * @var    mixed
      * @since  1.0
      */
-    protected $_currentRow;
+    protected $_row;
 
     /**
      * Current row number
@@ -521,7 +525,7 @@ class File_CSV_Iterator implements Iterator
      */
     public function __construct(File_CSV $csvfile)
     {
-        if (preg_match('/^[waxc][bt]?$/', $csvfile->getMode())) {
+        if (!preg_match('/^r.?$/', $csvfile->getMode())) {
             throw new File_UnsupportedOperationException(sprintf("file '%s' is not open for reading", $csvfile->getPath()));
         }
 
@@ -543,7 +547,7 @@ class File_CSV_Iterator implements Iterator
     public function rewind()
     {
         $this->_csvfile->seek(0);
-        $this->_currentRow = $this->_csvfile->read();
+        $this->_row = $this->_csvfile->read();
         $this->_rowNumber = 0;
     }
 
@@ -559,7 +563,7 @@ class File_CSV_Iterator implements Iterator
      */
     public function valid()
     {
-        return $this->_currentRow !== null;
+        return $this->_row !== null;
     }
 
     // }}}
@@ -587,7 +591,7 @@ class File_CSV_Iterator implements Iterator
      */
     public function current()
     {
-        return $this->_currentRow;
+        return $this->_row;
     }
 
     // }}}
@@ -604,7 +608,7 @@ class File_CSV_Iterator implements Iterator
      */
     public function next()
     {
-        $this->_currentRow = $this->_csvfile->read();
+        $this->_row = $this->_csvfile->read();
         $this->_rowNumber++;
     }
 
@@ -613,5 +617,15 @@ class File_CSV_Iterator implements Iterator
 
 // }}}
 // }}}
+
+$options = array(
+    'length' => 100,
+    'delimiter' => ',',
+    'enclosure' => '"',
+    'encoding' => 'utf-8',
+    'filter' => 'trim'
+);
+
+$file = File_CSV::open(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'us-500.csv', 'r', $options);
 
 ?>
