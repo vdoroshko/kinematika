@@ -496,7 +496,7 @@ class File_CSV_Iterator implements Iterator
      * @var    object
      * @since  1.0
      */
-    protected $_csvfile;
+    protected $_csv;
 
     /**
      * Current row data
@@ -520,16 +520,16 @@ class File_CSV_Iterator implements Iterator
     /**
      * Constructs a new File_CSV_Iterator object
      *
-     * @param  object  $csvfile The File_CSV object to traverse
+     * @param  object  $csv The File_CSV object to traverse
      * @throws File_UnsupportedOperationException
      */
-    public function __construct(File_CSV $csvfile)
+    public function __construct(File_CSV $csv)
     {
-        if (!preg_match('/^r.?$/', $csvfile->getMode())) {
-            throw new File_UnsupportedOperationException(sprintf("file '%s' is not open for reading", $csvfile->getPath()));
+        if (!preg_match('/^r.?$/', $csv->getMode())) {
+            throw new File_UnsupportedOperationException(sprintf("file '%s' is not open for reading", $csv->getPath()));
         }
 
-        $this->_csvfile = $csvfile;
+        $this->_csv = $csv;
     }
 
     // }}}
@@ -546,8 +546,8 @@ class File_CSV_Iterator implements Iterator
      */
     public function rewind()
     {
-        $this->_csvfile->seek(0);
-        $this->_row = $this->_csvfile->read();
+        $this->_csv->seek(0);
+        $this->_row = $this->_csv->read();
         $this->_rowNumber = 0;
     }
 
@@ -608,7 +608,7 @@ class File_CSV_Iterator implements Iterator
      */
     public function next()
     {
-        $this->_row = $this->_csvfile->read();
+        $this->_row = $this->_csv->read();
         $this->_rowNumber++;
     }
 
@@ -617,15 +617,5 @@ class File_CSV_Iterator implements Iterator
 
 // }}}
 // }}}
-
-$options = array(
-    'length' => 100,
-    'delimiter' => ',',
-    'enclosure' => '"',
-    'encoding' => 'utf-8',
-    'filter' => 'trim'
-);
-
-$file = File_CSV::open(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'us-500.csv', 'r', $options);
 
 ?>
