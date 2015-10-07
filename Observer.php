@@ -68,7 +68,7 @@ interface Observer
     /**
      * Invoked to update the observer on a change in the observable
      *
-     * @param  mixed   $data The data about what changed in the observable
+     * @param  mixed   $data The data about a change in the observable
      * @return void
      * @since  1.0
      */
