@@ -93,7 +93,7 @@ interface Observable
     /**
      * Notifies the observers of a change in the observable
      *
-     * @param  mixed   $data The data about a change in the observable to pass to the observers
+     * @param  mixed   $data The data about a change in the observable
      * @return void
      * @since  1.0
      */
