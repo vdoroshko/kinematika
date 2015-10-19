@@ -240,7 +240,7 @@ class Date_Calendar
 
         $this->_firstDayTimestamp = strtotime(sprintf('+%d days', $firstDayOfWeek), $firstDayOfFirstWeekTimestamp);
         if ($this->_firstDayTimestamp > $firstDayOfMonthTimestamp) {
-            $this->_firstDayTimestamp = strtotime('-7 days');
+            $this->_firstDayTimestamp = strtotime('-7 days', $this->_firstDayTimestamp);
         }
 
         $this->_lastDayTimestamp = strtotime('+41 days', $this->_firstDayTimestamp);
