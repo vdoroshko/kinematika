@@ -238,9 +238,9 @@ class Date_Calendar
         $firstDayOfMonthTimestamp = strtotime(sprintf('%04d-%02d-01 00:00:00', $this->_year, $this->_month));
         $firstDayOfFirstWeekTimestamp = strtotime(sprintf('-%d days', date('w', $firstDayOfMonthTimestamp)), $firstDayOfMonthTimestamp);
 
-        $this->_firstDayTimestamp = $firstDayOfFirstWeekTimestamp + (integer)$firstDayOfWeek * 86400;
+        $this->_firstDayTimestamp = strtotime(sprintf('+%d days', $firstDayOfWeek), $firstDayOfFirstWeekTimestamp);
         if ($this->_firstDayTimestamp > $firstDayOfMonthTimestamp) {
-            $this->_firstDayTimestamp -= 7 * 86400;
+            $this->_firstDayTimestamp = strtotime('-7 days');
         }
 
         $this->_lastDayTimestamp = strtotime('+41 days', $this->_firstDayTimestamp);
