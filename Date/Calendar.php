@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Simple calendar generating class
+ * Calendar generating class
  *
  * PHP version 5
  *
@@ -50,7 +50,7 @@
 // {{{ class Date_Calendar
 
 /**
- * Simple calendar generating class
+ * Calendar generating class
  *
  * @category   Date and Time
  * @package    Date_Calendar
