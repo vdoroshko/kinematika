@@ -90,7 +90,7 @@ class Date_Calendar
     protected $_firstDayOfWeek;
 
     /**
-     * Timestamp for first day of calendar
+     * Unix timestamp for first day of calendar
      *
      * @var    integer
      * @since  1.0
@@ -98,7 +98,7 @@ class Date_Calendar
     protected $_firstDayTimestamp;
 
     /**
-     * Timestamp for last day of calendar
+     * Unix timestamp for last day of calendar
      *
      * @var    integer
      * @since  1.0
@@ -106,12 +106,20 @@ class Date_Calendar
     protected $_lastDayTimestamp;
 
     /**
-     * Timestamp for first day of week
+     * Unix timestamp for first day of week
      *
      * @var    integer
      * @since  1.0
      */
     protected $_firstDayOfWeekTimestamp;
+
+    /**
+     * Unix timestamp for first day of month
+     *
+     * @var    integer
+     * @since  1.0
+     */
+    protected $_firstDayOfMonthTimestamp;
 
     // }}}
     // {{{ constructor
@@ -235,16 +243,115 @@ class Date_Calendar
 
         $this->_firstDayOfWeek = (integer)$firstDayOfWeek;
 
-        $firstDayOfMonthTimestamp = strtotime(sprintf('%04d-%02d-01 00:00:00', $this->_year, $this->_month));
-        $firstDayOfFirstWeekTimestamp = strtotime(sprintf('-%d days', date('w', $firstDayOfMonthTimestamp)), $firstDayOfMonthTimestamp);
+        $this->_firstDayOfMonthTimestamp = strtotime(sprintf('%04d-%02d-01 00:00:00', $this->_year, $this->_month));
+        $firstDayOfFirstWeekTimestamp = strtotime(sprintf('-%d days', date('w', $this->_firstDayOfMonthTimestamp)), $this->_firstDayOfMonthTimestamp);
 
         $this->_firstDayTimestamp = strtotime(sprintf('+%d days', $firstDayOfWeek), $firstDayOfFirstWeekTimestamp);
-        if ($this->_firstDayTimestamp > $firstDayOfMonthTimestamp) {
+        if ($this->_firstDayTimestamp > $this->_firstDayOfMonthTimestamp) {
             $this->_firstDayTimestamp = strtotime('-7 days', $this->_firstDayTimestamp);
         }
 
         $this->_lastDayTimestamp = strtotime('+41 days', $this->_firstDayTimestamp);
         $this->_firstDayOfWeekTimestamp = $this->_firstDayTimestamp;
+    }
+
+    // }}}
+    // {{{ getFirstDay()
+
+    /**
+     * Returns the Unix timestamp for the first day of the calendar
+     *
+     * @return integer The Unix timestamp for the first day of the calendar
+     * @since  1.0
+     */
+    public function getFirstDay()
+    {
+        return $this->_firstDayTimestamp;
+    }
+
+    // }}}
+    // {{{ getLastDay()
+
+    /**
+     * Returns the Unix timestamp for the last day of the calendar
+     *
+     * @return integer The Unix timestamp for the last day of the calendar
+     * @since  1.0
+     */
+    public function getLastDay()
+    {
+        return $this->_lastDayTimestamp;
+    }
+
+    // }}}
+    // {{{ getFirstDayOfMonth()
+
+    /**
+     * Returns the Unix timestamp for the first day of the month
+     *
+     * @return integer The Unix timestamp for the first day of the month
+     * @since  1.0
+     */
+    public function getFirstDayOfMonth()
+    {
+        return $this->_firstDayOfMonthTimestamp;
+    }
+
+    // }}}
+    // {{{ getLastDayOfMonth()
+
+    /**
+     * Returns the Unix timestamp for the last day of the month
+     *
+     * @return integer The Unix timestamp for the last day of the month
+     * @since  1.0
+     */
+    public function getLastDayOfMonth()
+    {
+        return mktime(0, 0, 0, date('n', $this->_firstDayOfMonthTimestamp), date('t', $this->_firstDayOfMonthTimestamp), date('Y', $this->_firstDayOfMonthTimestamp));
+    }
+
+    // }}}
+    // {{{ getFirstDayOfPreviousMonth()
+
+    /**
+     * Returns the Unix timestamp for the first day of the previous month
+     *
+     * @return integer The Unix timestamp for the first day of the previous month
+     * @since  1.0
+     */
+    public function getFirstDayOfPreviousMonth()
+    {
+        $lastDayOfPreviousMonthTimestamp = $this->getLastDayOfPreviousMonth();
+        return mktime(0, 0, 0, date('n', $lastDayOfPreviousMonthTimestamp), 1, date('Y', $lastDayOfPreviousMonthTimestamp));
+    }
+
+    // }}}
+    // {{{ getLastDayOfPreviousMonth()
+
+    /**
+     * Returns the Unix timestamp for the last day of the previous month
+     *
+     * @return integer The Unix timestamp for the last day of the previous month
+     * @since  1.0
+     */
+    public function getLastDayOfPreviousMonth()
+    {
+        return strtotime('-1 day', $this->_firstDayOfMonthTimestamp);
+    }
+
+    // }}}
+    // {{{ getFirstDayOfNextMonth()
+
+    /**
+     * Returns the Unix timestamp for the first day of the next month
+     *
+     * @return integer The Unix timestamp for the first day of the next month
+     * @since  1.0
+     */
+    public function getFirstDayOfNextMonth()
+    {
+        return strtotime('+1 day', $this->getLastDayOfMonth());
     }
 
     // }}}
