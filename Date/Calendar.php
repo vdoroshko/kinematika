@@ -163,10 +163,6 @@ class Date_Calendar
      * Fetches a row of the calendar data into an array then moves the internal
      * pointer to the next row
      *
-     * @return mixed   A numeric array containing day timestamps or null if there
-     *                 are no more rows
-     * @return mixed   A numeric array containing days of the week as Unix timestamps or null if there
-     *                 are no more rows
      * @return mixed   A numeric array containing Unix timestamps for the days of
      *                 the week or null if there are no more rows
      * @since  1.0
