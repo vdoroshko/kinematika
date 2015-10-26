@@ -76,13 +76,13 @@ class HTTP_Exception extends RuntimeException
     {
         if (is_numeric((string)$message)) {
             if ((integer)$message < 100 || (integer)$message > 599) {
-                throw new OutOfRangeException('HTTP status code should be between 100-599');
+                throw new OutOfRangeException('HTTP status code must be between 100-599');
             }
 
             parent::__construct('', (integer)$message);
         } else {
             if ((integer)$code < 100 || (integer)$code > 599) {
-                throw new OutOfRangeException('HTTP status code should be between 100-599');
+                throw new OutOfRangeException('HTTP status code must be between 100-599');
             }
 
             parent::__construct((string)$message, (integer)$code);
@@ -126,7 +126,7 @@ class HTTP_Redirect extends HTTP_Exception
         }
 
         if ((integer)$code < 300 || (integer)$code > 399) {
-            throw new OutOfRangeException('HTTP status code should be between 300-399');
+            throw new OutOfRangeException('HTTP status code must be between 300-399');
         }
 
         parent::__construct($url, $code);
