@@ -66,7 +66,7 @@ class Date_Calendar
     // {{{ protected class properties
 
     /**
-     * Calendar month
+     * Month of calendar
      *
      * @var    integer
      * @since  1.0
@@ -74,7 +74,7 @@ class Date_Calendar
     protected $_month;
 
     /**
-     * Calendar year
+     * Year of calendar
      *
      * @var    integer
      * @since  1.0
@@ -82,7 +82,7 @@ class Date_Calendar
     protected $_year;
 
     /**
-     * First day of week
+     * First day of week of calendar
      *
      * @var    integer
      * @since  1.0
@@ -106,20 +106,20 @@ class Date_Calendar
     protected $_lastDayTimestamp;
 
     /**
-     * Unix timestamp for first day of week
-     *
-     * @var    integer
-     * @since  1.0
-     */
-    protected $_firstDayOfWeekTimestamp;
-
-    /**
      * Unix timestamp for first day of month
      *
      * @var    integer
      * @since  1.0
      */
     protected $_firstDayOfMonthTimestamp;
+
+    /**
+     * Unix timestamp for first day of week
+     *
+     * @var    integer
+     * @since  1.0
+     */
+    protected $_firstDayOfWeekTimestamp;
 
     // }}}
     // {{{ constructor
@@ -129,7 +129,7 @@ class Date_Calendar
      *
      * @param  integer $month (optional) The month of the calendar to be generated
      * @param  integer $year (optional) The year of the calendar to be generated
-     * @param  integer $firstDayOfWeek (optional) The first day of the week
+     * @param  integer $firstDayOfWeek (optional) The first day of the week of the calendar
      * @throws OutOfRangeException
      */
     public function __construct($month = null, $year = null, $firstDayOfWeek = 0)
@@ -165,6 +165,10 @@ class Date_Calendar
      *
      * @return mixed   A numeric array containing day timestamps or null if there
      *                 are no more rows
+     * @return mixed   A numeric array containing days of the week as Unix timestamps or null if there
+     *                 are no more rows
+     * @return mixed   A numeric array containing Unix timestamps for the days of
+     *                 the week or null if there are no more rows
      * @since  1.0
      */
     public function fetchRow()
@@ -214,9 +218,9 @@ class Date_Calendar
     // {{{ getFirstDayOfWeek()
 
     /**
-     * Returns the first day of the week
+     * Returns the first day of the week of the calendar
      *
-     * @return integer The first day of the week
+     * @return integer The first day of the week of the calendar
      * @since  1.0
      */
     public function getFirstDayOfWeek()
@@ -228,9 +232,9 @@ class Date_Calendar
     // {{{ setFirstDayOfWeek()
 
     /**
-     * Sets the first day of the week
+     * Sets the first day of the week of the calendar
      *
-     * @param  integer $firstDayOfWeek The first day of the week
+     * @param  integer $firstDayOfWeek The first day of the week of the calendar
      * @return void
      * @throws OutOfRangeException
      * @since  1.0
@@ -243,7 +247,7 @@ class Date_Calendar
 
         $this->_firstDayOfWeek = (integer)$firstDayOfWeek;
 
-        $this->_firstDayOfMonthTimestamp = strtotime(sprintf('%04d-%02d-01 00:00:00', $this->_year, $this->_month));
+        $this->_firstDayOfMonthTimestamp = mktime(0, 0, 0, $this->_month, 1, $this->_year);
         $firstDayOfFirstWeekTimestamp = strtotime(sprintf('-%d days', date('w', $this->_firstDayOfMonthTimestamp)), $this->_firstDayOfMonthTimestamp);
 
         $this->_firstDayTimestamp = strtotime(sprintf('+%d days', $firstDayOfWeek), $firstDayOfFirstWeekTimestamp);
@@ -322,8 +326,7 @@ class Date_Calendar
      */
     public function getFirstDayOfPreviousMonth()
     {
-        $lastDayOfPreviousMonthTimestamp = $this->getLastDayOfPreviousMonth();
-        return mktime(0, 0, 0, date('n', $lastDayOfPreviousMonthTimestamp), 1, date('Y', $lastDayOfPreviousMonthTimestamp));
+        return mktime(0, 0, 0, date('n', $this->_firstDayOfMonthTimestamp - 1), 1, date('Y', $this->_firstDayOfMonthTimestamp - 1));
     }
 
     // }}}
@@ -351,7 +354,21 @@ class Date_Calendar
      */
     public function getFirstDayOfNextMonth()
     {
-        return strtotime('+1 day', $this->getLastDayOfMonth());
+        return mktime(0, 0, 0, date('n', $this->_lastDayTimestamp), 1, date('Y', $this->_lastDayTimestamp));
+    }
+
+    // }}}
+    // {{{ getLastDayOfNextMonth()
+
+    /**
+     * Returns the Unix timestamp for the last day of the next month
+     *
+     * @return integer The Unix timestamp for the last day of the next month
+     * @since  1.0
+     */
+    public function getLastDayOfNextMonth()
+    {
+        return mktime(0, 0, 0, date('n', $this->_lastDayTimestamp), date('t', $this->_lastDayTimestamp), date('Y', $this->_lastDayTimestamp));
     }
 
     // }}}
