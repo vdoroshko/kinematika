@@ -244,9 +244,9 @@ class Date_Calendar
         $this->_firstDayOfWeek = (integer)$firstDayOfWeek;
 
         $this->_firstDayOfMonthTimestamp = mktime(0, 0, 0, $this->_month, 1, $this->_year);
-        $firstDayOfFirstWeekTimestamp = strtotime(sprintf('-%d days', date('w', $this->_firstDayOfMonthTimestamp)), $this->_firstDayOfMonthTimestamp);
+        $firstSundayOfMonthTimestamp = strtotime(sprintf('-%d days', date('w', $this->_firstDayOfMonthTimestamp)), $this->_firstDayOfMonthTimestamp);
 
-        $this->_firstDayTimestamp = strtotime(sprintf('+%d days', $firstDayOfWeek), $firstDayOfFirstWeekTimestamp);
+        $this->_firstDayTimestamp = strtotime(sprintf('+%d days', $firstDayOfWeek), $firstSundayOfMonthTimestamp);
         if ($this->_firstDayTimestamp > $this->_firstDayOfMonthTimestamp) {
             $this->_firstDayTimestamp = strtotime('-7 days', $this->_firstDayTimestamp);
         }
