@@ -66,7 +66,7 @@ class Date_Calendar
     // {{{ protected class properties
 
     /**
-     * Month of calendar
+     * Month of the calendar
      *
      * @var    integer
      * @since  1.0
@@ -74,7 +74,7 @@ class Date_Calendar
     protected $_month;
 
     /**
-     * Year of calendar
+     * Year of the calendar
      *
      * @var    integer
      * @since  1.0
@@ -82,7 +82,7 @@ class Date_Calendar
     protected $_year;
 
     /**
-     * First day of week of calendar
+     * First day of the week of the calendar
      *
      * @var    integer
      * @since  1.0
@@ -90,7 +90,7 @@ class Date_Calendar
     protected $_firstDayOfWeek;
 
     /**
-     * Unix timestamp for first day of calendar
+     * Unix timestamp for the first day of the calendar
      *
      * @var    integer
      * @since  1.0
@@ -98,7 +98,7 @@ class Date_Calendar
     protected $_firstDayTime;
 
     /**
-     * Unix timestamp for last day of calendar
+     * Unix timestamp for the last day of the calendar
      *
      * @var    integer
      * @since  1.0
@@ -106,7 +106,7 @@ class Date_Calendar
     protected $_lastDayTime;
 
     /**
-     * Unix timestamp for first day of month
+     * Unix timestamp for the first day of the month
      *
      * @var    integer
      * @since  1.0
@@ -114,7 +114,7 @@ class Date_Calendar
     protected $_firstDayOfMonthTime;
 
     /**
-     * Unix timestamp for first day of week
+     * Unix timestamp for the first day of the week
      *
      * @var    integer
      * @since  1.0
