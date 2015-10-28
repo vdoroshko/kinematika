@@ -95,7 +95,7 @@ class Date_Calendar
      * @var    integer
      * @since  1.0
      */
-    protected $_firstDayTimestamp;
+    protected $_firstDayTime;
 
     /**
      * Unix timestamp for last day of calendar
@@ -103,7 +103,7 @@ class Date_Calendar
      * @var    integer
      * @since  1.0
      */
-    protected $_lastDayTimestamp;
+    protected $_lastDayTime;
 
     /**
      * Unix timestamp for first day of month
@@ -111,7 +111,7 @@ class Date_Calendar
      * @var    integer
      * @since  1.0
      */
-    protected $_firstDayOfMonthTimestamp;
+    protected $_firstDayOfMonthTime;
 
     /**
      * Unix timestamp for first day of week
@@ -119,7 +119,7 @@ class Date_Calendar
      * @var    integer
      * @since  1.0
      */
-    protected $_firstDayOfWeekTimestamp;
+    protected $_firstDayOfWeekTime;
 
     // }}}
     // {{{ constructor
@@ -169,14 +169,14 @@ class Date_Calendar
      */
     public function fetchRow()
     {
-        if ($this->_firstDayOfWeekTimestamp > $this->_lastDayTimestamp) {
+        if ($this->_firstDayOfWeekTime > $this->_lastDayTime) {
             return null;
         }
 
         $row = array();
         for ($i = 0; $i < 7; $i++) {
-            $row[] = $this->_firstDayOfWeekTimestamp;
-            $this->_firstDayOfWeekTimestamp = strtotime('+1 day', $this->_firstDayOfWeekTimestamp);
+            $row[] = $this->_firstDayOfWeekTime;
+            $this->_firstDayOfWeekTime = strtotime('+1 day', $this->_firstDayOfWeekTime);
         }
 
         return $row;
@@ -243,16 +243,16 @@ class Date_Calendar
 
         $this->_firstDayOfWeek = (integer)$firstDayOfWeek;
 
-        $this->_firstDayOfMonthTimestamp = mktime(0, 0, 0, $this->_month, 1, $this->_year);
-        $firstSundayTimestamp = strtotime(sprintf('-%d days', date('w', $this->_firstDayOfMonthTimestamp)), $this->_firstDayOfMonthTimestamp);
+        $this->_firstDayOfMonthTime = mktime(0, 0, 0, $this->_month, 1, $this->_year);
+        $firstSundayTime = strtotime(sprintf('-%d days', date('w', $this->_firstDayOfMonthTime)), $this->_firstDayOfMonthTime);
 
-        $this->_firstDayTimestamp = strtotime(sprintf('+%d days', $firstDayOfWeek), $firstSundayTimestamp);
-        if ($this->_firstDayTimestamp > $this->_firstDayOfMonthTimestamp) {
-            $this->_firstDayTimestamp = strtotime('-7 days', $this->_firstDayTimestamp);
+        $this->_firstDayTime = strtotime(sprintf('+%d days', $firstDayOfWeek), $firstSundayTime);
+        if ($this->_firstDayTime > $this->_firstDayOfMonthTime) {
+            $this->_firstDayTime = strtotime('-7 days', $this->_firstDayTime);
         }
 
-        $this->_lastDayTimestamp = strtotime('+41 days', $this->_firstDayTimestamp);
-        $this->_firstDayOfWeekTimestamp = $this->_firstDayTimestamp;
+        $this->_lastDayTime = strtotime('+41 days', $this->_firstDayTime);
+        $this->_firstDayOfWeekTime = $this->_firstDayTime;
     }
 
     // }}}
@@ -266,7 +266,7 @@ class Date_Calendar
      */
     public function getFirstDay()
     {
-        return $this->_firstDayTimestamp;
+        return $this->_firstDayTime;
     }
 
     // }}}
@@ -280,7 +280,7 @@ class Date_Calendar
      */
     public function getLastDay()
     {
-        return $this->_lastDayTimestamp;
+        return $this->_lastDayTime;
     }
 
     // }}}
@@ -294,7 +294,7 @@ class Date_Calendar
      */
     public function getFirstDayOfMonth()
     {
-        return $this->_firstDayOfMonthTimestamp;
+        return $this->_firstDayOfMonthTime;
     }
 
     // }}}
@@ -308,7 +308,7 @@ class Date_Calendar
      */
     public function getLastDayOfMonth()
     {
-        return mktime(0, 0, 0, date('n', $this->_firstDayOfMonthTimestamp), date('t', $this->_firstDayOfMonthTimestamp), date('Y', $this->_firstDayOfMonthTimestamp));
+        return mktime(0, 0, 0, date('n', $this->_firstDayOfMonthTime), date('t', $this->_firstDayOfMonthTime), date('Y', $this->_firstDayOfMonthTime));
     }
 
     // }}}
@@ -322,7 +322,7 @@ class Date_Calendar
      */
     public function getFirstDayOfPreviousMonth()
     {
-        return mktime(0, 0, 0, date('n', $this->_firstDayOfMonthTimestamp - 1), 1, date('Y', $this->_firstDayOfMonthTimestamp - 1));
+        return mktime(0, 0, 0, date('n', $this->_firstDayOfMonthTime - 1), 1, date('Y', $this->_firstDayOfMonthTime - 1));
     }
 
     // }}}
@@ -336,7 +336,7 @@ class Date_Calendar
      */
     public function getLastDayOfPreviousMonth()
     {
-        return strtotime('-1 day', $this->_firstDayOfMonthTimestamp);
+        return strtotime('-1 day', $this->_firstDayOfMonthTime);
     }
 
     // }}}
@@ -350,7 +350,7 @@ class Date_Calendar
      */
     public function getFirstDayOfNextMonth()
     {
-        return mktime(0, 0, 0, date('n', $this->_lastDayTimestamp), 1, date('Y', $this->_lastDayTimestamp));
+        return mktime(0, 0, 0, date('n', $this->_lastDayTime), 1, date('Y', $this->_lastDayTime));
     }
 
     // }}}
@@ -364,7 +364,7 @@ class Date_Calendar
      */
     public function getLastDayOfNextMonth()
     {
-        return mktime(0, 0, 0, date('n', $this->_lastDayTimestamp), date('t', $this->_lastDayTimestamp), date('Y', $this->_lastDayTimestamp));
+        return mktime(0, 0, 0, date('n', $this->_lastDayTime), date('t', $this->_lastDayTime), date('Y', $this->_lastDayTime));
     }
 
     // }}}
