@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Calendar generating class
+ * Calendar helper class
  *
  * PHP version 5
  *
@@ -50,7 +50,7 @@
 // {{{ class Date_Calendar
 
 /**
- * Calendar generating class
+ * Calendar helper class
  *
  * @category   Date and Time
  * @package    Date_Calendar
@@ -127,8 +127,8 @@ class Date_Calendar
     /**
      * Constructs a new Date_Calendar object
      *
-     * @param  integer $month (optional) The month of the calendar to be generated
-     * @param  integer $year (optional) The year of the calendar to be generated
+     * @param  integer $month (optional) The month of the calendar
+     * @param  integer $year (optional) The year of the calendar
      * @param  integer $firstDayOfWeek (optional) The first day of the week of the calendar
      * @throws OutOfRangeException
      */
