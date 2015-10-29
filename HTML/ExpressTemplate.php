@@ -262,7 +262,7 @@ class HTML_ExpressTemplate
 // {{{ class HTML_ExpressTemplate_Exception
 
 /**
- * Base class for all template exceptions
+ * Base class for all templating exceptions
  *
  * @category   HTML
  * @package    HTML_ExpressTemplate
