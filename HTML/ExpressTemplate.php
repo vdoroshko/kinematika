@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Simple templating class
+ * PHP templating class
  *
  * PHP version 5
  *
@@ -50,7 +50,7 @@
 // {{{ class HTML_ExpressTemplate
 
 /**
- * Simple templating class
+ * PHP templating class
  *
  * @category   HTML
  * @package    HTML_ExpressTemplate
