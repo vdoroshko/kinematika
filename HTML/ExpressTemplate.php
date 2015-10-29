@@ -315,7 +315,7 @@ class HTML_ExpressTemplate_FileNotFoundException extends HTML_ExpressTemplate_IO
 // {{{ class HTML_ExpressTemplate_InvalidFilenameException
 
 /**
- * Exception class that is thrown when a filename of a template file is
+ * Exception class that is thrown when the filename of a template file is
  * invalid
  *
  * @category   HTML
