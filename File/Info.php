@@ -119,12 +119,12 @@ class File_Info
     // {{{ protected class properties
 
     /**
-     * Path to the file
+     * Filename of the file
      *
      * @var    string
      * @since  1.0
      */
-    protected $_path;
+    protected $_filename;
 
     /**
      * Path of the parent directory
@@ -197,26 +197,26 @@ class File_Info
      * Constructs a new File_Info object and obtains information about a file
      * on the specified path
      *
-     * @param  string  $path The file to obtain information about
+     * @param  string  $filename The filename of the file to obtain information about
      * @param  boolean $useIncludePath (optional) Whether to search for the file in the include path too
      * @throws File_InvalidPathException
      * @throws File_NotFoundException
      * @throws File_IOException
      */
-    public function __construct($path, $useIncludePath = false)
+    public function __construct($filename, $useIncludePath = false)
     {
-        if (empty($path)) {
+        if (empty($filename)) {
             throw new File_InvalidPathException('file path cannot be empty');
         }
 
-        if (!@file_exists((string)$path)) {
+        if (!@file_exists((string)$filename)) {
             $fileNotFound = true;
 
             if ($useIncludePath) {
                 $includePaths = explode(PATH_SEPARATOR, get_include_path());
                 foreach ($includePaths as $includePath) {
-                    $this->_path = $includePath . DIRECTORY_SEPARATOR . (string)$path;
-                    if (@file_exists($this->_path)) {
+                    $this->_filename = $includePath . DIRECTORY_SEPARATOR . (string)$filename;
+                    if (@file_exists($this->_filename)) {
                         $fileNotFound = false;
                         break;
                     }
@@ -224,39 +224,39 @@ class File_Info
             }
 
             if ($fileNotFound) {
-                throw new File_NotFoundException(sprintf("file '%s' not found", $path));
+                throw new File_NotFoundException(sprintf("file '%s' not found", $filename));
             }
         } else {
-            $this->_path = (string)$path;
+            $this->_filename = (string)$filename;
         }
 
-        if (($lastDirectorySeparatorPos = strrpos($this->_path, DIRECTORY_SEPARATOR)) !== false) {
-            $this->_dirname = substr($this->_path, 0, $lastDirectorySeparatorPos);
-            $this->_basename = substr($this->_path, $lastDirectorySeparatorPos + 1);
+        if (($lastDirectorySeparatorPos = strrpos($this->_filename, DIRECTORY_SEPARATOR)) !== false) {
+            $this->_dirname = substr($this->_filename, 0, $lastDirectorySeparatorPos);
+            $this->_basename = substr($this->_filename, $lastDirectorySeparatorPos + 1);
         } else {
             $this->_dirname = '';
-            $this->_basename = $this->_path;
+            $this->_basename = $this->_filename;
         }
 
         $extensionPattern = '/\.([^\.' . preg_quote(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR) . ']+)$/';
         $matches = array();
 
-        if (preg_match($extensionPattern, $this->_path, $matches)) {
+        if (preg_match($extensionPattern, $this->_filename, $matches)) {
             $this->_extension = $matches[1];
         } else {
             $this->_extension = '';
         }
 
-        if (($this->_type = @filetype($this->_path)) === false) {
-            throw new File_IOException(sprintf("lstat failed for file '%s'", $path));
+        if (($this->_type = @filetype($this->_filename)) === false) {
+            throw new File_IOException(sprintf("lstat failed for file '%s'", $filename));
         }
 
         if ($this->_type == self::TYPE_FILE) {
-            if (($this->_size = @filesize($this->_path)) === false) {
-                throw new File_IOException(sprintf("stat failed for file '%s'", $path));
+            if (($this->_size = @filesize($this->_filename)) === false) {
+                throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
             }
         } elseif ($this->_type == self::TYPE_LINK) {
-            $symlinkPath = $this->_path;
+            $symlinkPath = $this->_filename;
             do {
                 if (($targetPath = @readlink($symlinkPath)) === false) {
                     throw new File_IOException(sprintf("readlink failed for file '%s'", $symlinkPath));
@@ -278,16 +278,16 @@ class File_Info
             $this->_type = null;
         }
 
-        if (($this->_lastAccessedTime = @fileatime($this->_path)) === false) {
-            throw new File_IOException(sprintf("stat failed for file '%s'", $path));
+        if (($this->_lastAccessedTime = @fileatime($this->_filename)) === false) {
+            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
         }
 
-        if (($this->_lastModifiedTime = @filemtime($this->_path)) === false) {
-            throw new File_IOException(sprintf("stat failed for file '%s'", $path));
+        if (($this->_lastModifiedTime = @filemtime($this->_filename)) === false) {
+            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
         }
 
-        if (($this->_lastChangedTime = @filectime($this->_path)) === false) {
-            throw new File_IOException(sprintf("stat failed for file '%s'", $path));
+        if (($this->_lastChangedTime = @filectime($this->_filename)) === false) {
+            throw new File_IOException(sprintf("stat failed for file '%s'", $filename));
         }
     }
 
