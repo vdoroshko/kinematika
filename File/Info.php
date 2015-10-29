@@ -159,7 +159,7 @@ class File_Info
     protected $_type;
 
     /**
-     * Size of the file
+     * Size of the file in bytes
      *
      * @var    mixed
      * @since  1.0
