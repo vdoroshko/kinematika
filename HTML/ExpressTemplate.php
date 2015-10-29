@@ -315,7 +315,8 @@ class HTML_ExpressTemplate_FileNotFoundException extends HTML_ExpressTemplate_IO
 // {{{ class HTML_ExpressTemplate_InvalidFilenameException
 
 /**
- * Exception class that is thrown when template filename is invalid
+ * Exception class that is thrown when a filename of a template file is
+ * invalid
  *
  * @category   HTML
  * @package    HTML_ExpressTemplate
@@ -353,7 +354,7 @@ class HTML_ExpressTemplate_ParseException extends HTML_ExpressTemplate_Exception
      *
      * @param  string  $message The exception message
      * @param  integer $code (optional) The exception code
-     * @param  string  $filename (optional) The file where the exception was thrown
+     * @param  string  $filename (optional) The filename of the file where the exception was thrown
      * @param  integer $line (optional) The line in the file where the exception was thrown
      */
     public function __construct($message, $code = 0, $filename = null, $line = null)
