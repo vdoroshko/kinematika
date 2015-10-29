@@ -114,7 +114,7 @@ class Calendar
     protected $_firstDayOfMonthTime;
 
     /**
-     * Unix timestamp for the first day of the week
+     * Unix timestamp for the first day of the calendar row to be fetched
      *
      * @var    integer
      * @since  1.0
@@ -160,11 +160,11 @@ class Calendar
     // {{{ fetchRow()
 
     /**
-     * Fetches a row of the calendar data into an array then moves the internal
-     * pointer to the next row
+     * Fetches a calendar row into an array then moves the internal pointer to the
+     * next row
      *
-     * @return mixed   A numeric array containing Unix timestamps for the days of
-     *                 the week or null if there are no more rows
+     * @return mixed   The calendar row as an array containing Unix timestamps for
+     *                 the days of the week or null if there are no more rows
      * @since  1.0
      */
     public function fetchRow()
