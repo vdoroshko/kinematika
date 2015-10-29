@@ -119,7 +119,7 @@ class File_Info
     // {{{ protected class properties
 
     /**
-     * Path to file
+     * Path to the file
      *
      * @var    string
      * @since  1.0
@@ -127,7 +127,7 @@ class File_Info
     protected $_path;
 
     /**
-     * Path of parent directory
+     * Path of the parent directory
      *
      * @var    string
      * @since  1.0
@@ -135,7 +135,7 @@ class File_Info
     protected $_dirname;
 
     /**
-     * Name of file without path
+     * Name of the file without path
      *
      * @var    string
      * @since  1.0
@@ -143,7 +143,7 @@ class File_Info
     protected $_basename;
 
     /**
-     * Extension of file
+     * Extension of the file
      *
      * @var    string
      * @since  1.0
@@ -151,7 +151,7 @@ class File_Info
     protected $_extension;
 
     /**
-     * Type of file
+     * Type of the file
      *
      * @var    mixed
      * @since  1.0
@@ -159,7 +159,7 @@ class File_Info
     protected $_type;
 
     /**
-     * Size of file
+     * Size of the file
      *
      * @var    mixed
      * @since  1.0
@@ -167,7 +167,7 @@ class File_Info
     protected $_size;
 
     /**
-     * Time when file was last accessed
+     * Unix timestamp of when the file was last accessed
      *
      * @var    integer
      * @since  1.0
@@ -175,7 +175,7 @@ class File_Info
     protected $_lastAccessedTime;
 
     /**
-     * Time when file was last modified
+     * Unix timestamp of when the file was last modified
      *
      * @var    integer
      * @since  1.0
@@ -183,7 +183,7 @@ class File_Info
     protected $_lastModifiedTime;
 
     /**
-     * Time when file status was last changed
+     * Unix timestamp of when the file status was last changed
      *
      * @var    integer
      * @since  1.0
@@ -197,7 +197,7 @@ class File_Info
      * Constructs a new File_Info object and obtains information about a file
      * on the specified path
      *
-     * @param  string  $path The path to the file to obtain information about
+     * @param  string  $path The file to obtain information about
      * @param  boolean $useIncludePath (optional) Whether to search for the file in the include path too
      * @throws File_InvalidPathException
      * @throws File_NotFoundException
@@ -206,7 +206,7 @@ class File_Info
     public function __construct($path, $useIncludePath = false)
     {
         if (empty($path)) {
-            throw new File_InvalidPathException('path to file cannot be empty');
+            throw new File_InvalidPathException('file path cannot be empty');
         }
 
         if (!@file_exists((string)$path)) {
