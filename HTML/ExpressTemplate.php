@@ -66,7 +66,7 @@ class HTML_ExpressTemplate
     // {{{ protected class properties
 
     /**
-     * Filename of template file
+     * Filename of the template file
      *
      * @var    string
      * @since  1.0
