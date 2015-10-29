@@ -340,8 +340,8 @@ class File_Info
      * Determines if an object property is set and is not null
      *
      * @param  string  $name The name of the object property to check
-     * @return boolean true if the object property exists and has value other than
-     *                 null or false otherwise
+     * @return boolean true if the object property exists and has a value other
+     *                 than null or false otherwise
      * @since  1.0
      */
     public function __isset($name)
