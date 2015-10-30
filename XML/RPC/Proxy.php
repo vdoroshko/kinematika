@@ -250,7 +250,7 @@ class XML_RPC_Proxy
      *
      * @param  string  $name The name of the method to invoke
      * @param  array   $args An array of arguments to pass to the method
-     * @return mixed   The method invocation result decoded into native PHP types
+     * @return mixed   The invocation result decoded into native PHP types
      * @throws XML_RPC_BadMethodCallException
      * @throws XML_RPC_FaultException
      * @throws XML_RPC_IOException
