@@ -202,10 +202,10 @@ class XML_RPC_Proxy
 
     /**
      * Returns either the values of all the runtime configuration options or the
-     * values of the specified runtime configuration options only
+     * values of only the specified ones
      *
-     * @param  array   $names (optional) An array of names of the options
-     * @return array   An associative array of the options
+     * @param  array   $names (optional) An array of the option names
+     * @return array   An associative array of the option names and their values
      * @throws DomainException
      * @since  1.0
      */
@@ -229,7 +229,7 @@ class XML_RPC_Proxy
     /**
      * Sets the values of the specified runtime configuration options
      *
-     * @param  array   $options An associative array of the options
+     * @param  array   $options An associative array of the option names and their values
      * @return void
      * @throws DomainException
      * @throws InvalidArgumentException
