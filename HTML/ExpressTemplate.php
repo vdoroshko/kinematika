@@ -185,8 +185,8 @@ class HTML_ExpressTemplate
     /**
      * Returns the value of a template variable
      *
-     * @param  string  $name The name of the template variable
-     * @return mixed   The value of the template variable
+     * @param  string  $name The name of the variable
+     * @return mixed   The value of the variable
      * @throws HTML_ExpressTemplate_UndefinedVariableException
      * @since  1.0
      */
@@ -212,8 +212,8 @@ class HTML_ExpressTemplate
     /**
      * Sets the value of a template variable
      *
-     * @param  string  $name The name of the template variable
-     * @param  mixed   $value The value of the template variable
+     * @param  string  $name The name of the variable
+     * @param  mixed   $value The value of the variable
      * @return void
      * @since  1.0
      */
@@ -228,9 +228,9 @@ class HTML_ExpressTemplate
     /**
      * Determines if a template variable is set and is not null
      *
-     * @param  string  $name The name of the template variable to check
-     * @return boolean true if the template variable exists and has value other
-     *                 than null or false otherwise
+     * @param  string  $name The name of the variable to check
+     * @return boolean true if the variable exists and has value other than null
+     *                 or false otherwise
      * @since  1.0
      */
     public function __isset($name)
@@ -244,7 +244,7 @@ class HTML_ExpressTemplate
     /**
      * Unsets a template variable
      *
-     * @param  string  $name The name of the template variable to unset
+     * @param  string  $name The name of the variable to unset
      * @return void
      * @since  1.0
      */
