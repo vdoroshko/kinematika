@@ -67,7 +67,7 @@ class XML_RPC_Proxy
     // {{{ protected class properties
 
     /**
-     * URL of XML-RPC server
+     * URL of the XML-RPC server
      *
      * @var    string
      * @since  1.0
@@ -147,32 +147,6 @@ class XML_RPC_Proxy
     }
 
     // }}}
-    // {{{ getOptions()
-
-    /**
-     * Returns either the values of all the runtime configuration options or the
-     * values of the specified runtime configuration options only
-     *
-     * @param  array   $names (optional) An array of names of the options
-     * @return array   An associative array of the options
-     * @throws DomainException
-     * @since  1.0
-     */
-    public function getOptions($names = array())
-    {
-        if (empty($names)) {
-            return $this->_options;
-        }
-
-        $options = array();
-        foreach ((array)$names as $name) {
-            $options[(string)$name] = $this->getOption($name);
-        }
-
-        return $options;
-    }
-
-    // }}}
     // {{{ setOption()
 
     /**
@@ -221,6 +195,32 @@ class XML_RPC_Proxy
             default:
                 $this->_options[(string)$name] = $value ? (string)$value : null;
         }
+    }
+
+    // }}}
+    // {{{ getOptions()
+
+    /**
+     * Returns either the values of all the runtime configuration options or the
+     * values of the specified runtime configuration options only
+     *
+     * @param  array   $names (optional) An array of names of the options
+     * @return array   An associative array of the options
+     * @throws DomainException
+     * @since  1.0
+     */
+    public function getOptions($names = array())
+    {
+        if (empty($names)) {
+            return $this->_options;
+        }
+
+        $options = array();
+        foreach ((array)$names as $name) {
+            $options[(string)$name] = $this->getOption($name);
+        }
+
+        return $options;
     }
 
     // }}}
