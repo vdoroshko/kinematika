@@ -75,7 +75,7 @@ class XML_RPC_Proxy
     protected $_url;
 
     /**
-     * Runtime configuration options
+     * Associative array of runtime configuration options
      *
      * @var    array
      * @since  1.0
