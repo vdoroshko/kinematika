@@ -119,8 +119,8 @@ class XML_RPC_FaultException extends XML_RPC_Exception
 // {{{ class XML_RPC_IOException
 
 /**
- * Exception class that is thrown when a communications failure occurs during
- * a XML-RPC method invocation
+ * Exception class that is thrown when network error occurred while
+ * communicating with an XML-RPC server
  *
  * @category   Web Services
  * @package    XML_RPC_Exception
@@ -132,6 +132,53 @@ class XML_RPC_FaultException extends XML_RPC_Exception
  * @since      1.0
  */
 class XML_RPC_IOException extends XML_RPC_Exception {}
+
+// }}}
+// {{{ class XML_RPC_HTTPException
+
+/**
+ * Exception class that is thrown when an HTTP error occured while communicating
+ * with an XML-RPC server
+ *
+ * @category   Web Services
+ * @package    XML_RPC_Exception
+ * @author     Vitaly Doroshko <vdoroshko@mail.ru>
+ * @copyright  2014, 2015 Vitaly Doroshko
+ * @license    http://opensource.org/licenses/BSD-3-Clause
+ *             BSD 3-Clause License
+ * @link       https://github.com/vdoroshko/kinematika
+ * @since      1.0
+ */
+class XML_RPC_HTTPException extends XML_RPC_IOException
+{
+    // {{{ constructor
+
+    /**
+     * Constructs a new XML_RPC_HTTPException object
+     *
+     * @param  mixed   $message Either the HTTP status code or the exception message
+     * @param  mixed   $code (optional) The HTTP status code
+     * @throws OutOfRangeException
+     */
+    public function __construct($message, $code = null)
+    {
+        if (is_numeric((string)$message)) {
+            if ((integer)$message < 100 || (integer)$message > 599) {
+                throw new OutOfRangeException('HTTP status code must be between 100-599');
+            }
+
+            parent::__construct('', (integer)$message);
+        } else {
+            if ((integer)$code < 100 || (integer)$code > 599) {
+                throw new OutOfRangeException('HTTP status code must be between 100-599');
+            }
+
+            parent::__construct((string)$message, (integer)$code);
+        }
+    }
+
+    // }}}
+}
 
 // }}}
 // {{{ class XML_RPC_NotAllowedException

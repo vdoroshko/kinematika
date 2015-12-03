@@ -253,6 +253,7 @@ class XML_RPC_Proxy
      * @return mixed   The invocation result decoded into native PHP types
      * @throws XML_RPC_BadMethodCallException
      * @throws XML_RPC_FaultException
+     * @throws XML_RPC_HTTPException
      * @throws XML_RPC_IOException
      * @throws XML_RPC_NotAllowedException
      * @since  1.0
@@ -282,6 +283,13 @@ class XML_RPC_Proxy
 
         $context = stream_context_create($options);
         if (($response = @file_get_contents($this->_url, false, $context)) === false) {
+            if (isset($http_response_header)) {
+                $matches = array();
+                if (preg_match('/^HTTP\/\d\.\d\s+(\d+)\s+(.+)$/', $http_response_header[0], $matches)) {
+                    throw new XML_RPC_HTTPException(sprintf("HTTP error %d while communicating with server at '%s'", $matches[1], $this->_url), $matches[1]);
+                }
+            }
+
             throw new XML_RPC_IOException(sprintf("unable to communicate with server at '%s'", $this->_url));
         }
 
